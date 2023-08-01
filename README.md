@@ -5,15 +5,13 @@ Tested on Arch + AMD GPU.
 
 ## Usage
 Launch the script with either `--amd` or `--nvidia` to install for either GPU vendor.
-Alternatively use `-i` to launch in interactive mode, where it will present you with options. (Not implemented yet)
 
 
 # Info
 Put your SD checkpoints (the huge ckpt/safetensors files) in: `models/checkpoints`
-
 Put your VAE in: `models/vae`
 
-To access python venv, use `source sdg/bin/activate` while in the ComfyUI directory.
+To access the python venv, use `source sdg/bin/activate` while in the ComfyUI directory.
 Use this before running any python commands.
 
 
