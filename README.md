@@ -27,15 +27,7 @@ This is the command to install the nightly with ROCm 5.6 that supports the 7000 
 #### NVIDIA
 Nvidia users should install torch and xformers using this command:
 
-```pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118 xformers```
-
-
-##### Troubleshooting
-If you get the "Torch not compiled with CUDA enabled" error, uninstall torch with:
-
-```pip uninstall torch```
-
-And install it again with the command above.
+```pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118xformers```
 
 
 #### Dependencies
@@ -46,8 +38,14 @@ Install the dependencies by opening your terminal inside the ComfyUI folder and:
 After this you should have everything installed and can proceed to running ComfyUI.
 
 
-#### For AMD cards not officially supported by ROCm
+#### Troubleshooting
+If you get the "Torch not compiled with CUDA enabled" error, uninstall torch with:
 
+```pip uninstall torch```
+
+And install it again with the command above.
+
+For AMD cards not officially supported by ROCm,
 Try running it with this command if you have issues:
 
 For 6700, 6600 and maybe other RDNA2 or older: ```HSA_OVERRIDE_GFX_VERSION=10.3.0 python main.py```
