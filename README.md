@@ -2,6 +2,7 @@
 Easily install ComfyUI portably on Linux.
 Tested on Arch + AMD GPU.
 
+![ComfyUI Screenshot](comfyui_screenshot.png)
 
 ## Usage
 Launch the script with either `--amd` or `--nvidia` to install for either GPU vendor.
