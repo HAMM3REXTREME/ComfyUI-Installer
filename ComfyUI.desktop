@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=ComfyUI
+Path=/home/user/ComfyUI/
+Exec=ComfyUI
+Comment=A powerful and modular stable diffusion GUI with a graph/nodes interface.
+Terminal=true
+Icon=comfyui.svg
+Type=Application
+NoDisplay=false
