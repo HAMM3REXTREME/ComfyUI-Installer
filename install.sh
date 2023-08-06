@@ -1,8 +1,9 @@
 #!/bin/sh
 
-amd_gpu_repo="https://download.pytorch.org/whl/rocm5.4.2"
-nvidia_gpu_repo="https://download.pytorch.org/whl/cu118xformers"
-
+# Repos
+readonly amd_gpu_repo="https://download.pytorch.org/whl/rocm5.4.2"
+readonly nvidia_gpu_repo="https://download.pytorch.org/whl/cu118xformers"
+readonly comfyui_main_repo="https://github.com/comfyanonymous/ComfyUI.git"
 
 printf "This script will install ComfyUI. Tested on Arch + AMD GPU.\n"
 printf "Make sure you have all the GPU packages needed along with git, python and pip.\n"
@@ -15,10 +16,10 @@ printf "Make sure you have all the GPU packages needed along with git, python an
 # Installer
 main_install () {
     printf "Cloning ComfyUI git repo...\n"
-    git clone https://github.com/comfyanonymous/ComfyUI.git
+    git clone "$comfyui_main_repo"
     cd ComfyUI || exit
 
-    printf "Setting a Python virtualenv...\n"
+    printf "Setting up a Python venv...\n"
     python -m venv sdg
     source sdg/bin/activate
     printf "Installing dependencies in python venv...\n"
@@ -27,9 +28,9 @@ main_install () {
 
     cp ../launch.sh comfyui
     chmod +x comfyui
-    printf "Invoke 'comfyui' inside the 'ComfyUI' folder to easily launch it.\n"
+    printf "Launch using './comfyui' inside the 'ComfyUI' folder.\n"
 
-    printf "You will need to install a checkpoint inside ComfyUI/models/checkpoints/ to get started.\n"
+    printf "Install a checkpoint inside ComfyUI/models/checkpoints/ to get started.\n"
 
 }
 
@@ -56,5 +57,4 @@ else
     printf "\033[0;31mError:\033[0m Please specify if you want to install for AMD or Nvidia GPU.\n"
     printf "Use either --amd or --nvidia as an argument.\n"
     exit
-    #GPU=$(zenity --list --title="Select your GPU" --column="Vendor" AMD Nvidia 2>&1)
 fi
