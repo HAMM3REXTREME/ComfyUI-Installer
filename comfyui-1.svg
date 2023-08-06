@@ -24,22 +24,23 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="px"
-     inkscape:zoom="2"
-     inkscape:cx="319"
-     inkscape:cy="253.5"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="178.89802"
+     inkscape:cy="289.20667"
      inkscape:window-width="1920"
      inkscape:window-height="1007"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     showgrid="false" />
   <defs
      id="defs1">
     <linearGradient
        id="linearGradient11"
        inkscape:collect="always">
       <stop
-         style="stop-color:#c76900;stop-opacity:1;"
+         style="stop-color:#edac00;stop-opacity:1;"
          offset="0"
          id="stop11" />
       <stop
@@ -144,7 +145,7 @@
          y="325.33267"
          style="stroke-width:1.07107">Comfy</tspan></text>
     <circle
-       style="fill:#ffd500;fill-opacity:1;stroke:#0a0a0a;stroke-width:4.05735;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#f0a031;fill-opacity:1;stroke:#0a0a0a;stroke-width:4.05735;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1"
        id="circle9"
        cx="426.57761"
        cy="87.966728"
