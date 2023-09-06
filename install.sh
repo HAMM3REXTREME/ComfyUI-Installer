@@ -2,10 +2,10 @@
 
 
 
-# Repos
-readonly amd_gpu_repo="https://download.pytorch.org/whl/rocm5.4.2"
-readonly nvidia_gpu_repo="https://download.pytorch.org/whl/cu118xformers"
-readonly comfyui_main_repo="https://github.com/comfyanonymous/ComfyUI.git"
+# Pip packages depend on GPU vendor.
+readonly pip_amd="torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/rocm5.4.2"
+readonly pip_nvidia="torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118 xformers"
+readonly comfyui_repo="https://github.com/comfyanonymous/ComfyUI.git"
 
 printf "This script will install ComfyUI. Tested on Arch + AMD GPU.\n"
 printf "Make sure you have all the GPU packages needed along with git, python and pip.\n"
@@ -23,7 +23,7 @@ main_install () {
     python -m venv sdg
     source sdg/bin/activate
     printf "Installing dependencies in python venv...\n"
-    pip install torch torchvision torchaudio --extra-index-url "$1"
+    pip install "$1"
     pip install -r requirements.txt
 
     cp ../launch.sh ComfyUI

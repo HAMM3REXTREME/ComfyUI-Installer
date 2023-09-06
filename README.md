@@ -28,7 +28,7 @@ This is the command to install the nightly with ROCm 5.6 that supports the 7000 
 #### NVIDIA
 Nvidia users should install torch and xformers using this command:
 
-```pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118xformers```
+```pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118 xformers```
 
 
 #### Dependencies
