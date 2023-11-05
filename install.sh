@@ -16,7 +16,7 @@ printf "Make sure you have all the GPU packages needed along with git, python an
 # Installer
 main_install () {
     printf "Cloning ComfyUI git repo...\n"
-    git clone "$comfyui_main_repo"
+    git clone "$comfyui_repo"
     cd ComfyUI || exit
 
     printf "Setting up a Python venv...\n"
