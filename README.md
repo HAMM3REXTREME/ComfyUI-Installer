@@ -20,7 +20,12 @@ Tested on Arch + AMD GPU.
 
 Once that is done, **launch comfyUI using**: `cd ComfyUI && ./ComfyUI`
 
-# Installing or upgrading python venv packages:
+# Updating ComfyUI
+
+Simply cd into the ComfyUI folder and run git pull  
+`cd ComfyUI && git pull`
+
+# Installing (or upgrading) python venv packages:
 
 While in the ComfyUI folder, run `source comfy-venv/bin/activate` in order to access the python venv.  
 (The installer creates the python venv inside the ComfyUI folder by default.)
