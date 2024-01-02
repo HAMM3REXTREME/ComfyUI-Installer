@@ -3,7 +3,7 @@
 
 
 # Pip packages depend on GPU vendor. You might want to try using an updated or nightly version here if ComfyUI is not working for you. 
-readonly pip_amd="torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/rocm5.6"
+readonly pip_amd="torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.6"
 readonly pip_nvidia="torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121 xformers"
 readonly comfyui_repo="https://github.com/comfyanonymous/ComfyUI.git"
 

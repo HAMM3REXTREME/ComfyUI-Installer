@@ -20,49 +20,31 @@ Tested on Arch + AMD GPU.
 
 Once that is done, **launch comfyUI using**: `cd ComfyUI && ./ComfyUI`
 
-# Updating ComfyUI
+# Updating
 
-Simply cd into the ComfyUI folder and run git pull  
+### Updating ComfyUI
+
+Simply cd into the ComfyUI folder and run git pull:  
 `cd ComfyUI && git pull`
 
-# Installing (or upgrading) python venv packages:
-
-While in the ComfyUI folder, run `source comfy-venv/bin/activate` in order to access the python venv.  
-(The installer creates the python venv inside the ComfyUI folder by default.)
-
-**Note:** You can pass `--update` in a `pip` command in order to update packages instead of installing.
+### Upgrading python venv packages
 
 **Note:** pytorch stable does not support python 3.12 yet. If you have python 3.12 you will have to use the nightly version of pytorch. If you run into issues you should try python 3.11 instead.
 
-#### AMD GPUs (Linux only)
+1. While in the ComfyUI folder, run `source comfy-venv/bin/activate` in order to access the python venv.  
+   (The installer creates the python venv inside the ComfyUI folder by default.)
 
-AMD users can install rocm and pytorch with pip if you don't have it already installed, this is the command to install the stable version:
+2. Upgrade torch, use the command for your GPU vendor:  
+   **For AMD:** `pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.6`  
+   **For Nvidia:** `pip install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121`  
+   _Some numbers might get updated as things get newer versions_
 
-`pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.6` (Installer default for AMD)
-
-This is the command to install the nightly with ROCm 5.6 that supports the 7000 series and might have some performance improvements:
-
-`pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm5.7`
-
-#### NVIDIA
-
-Nvidia users should install stable pytorch using this command:
-
-`pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121` (Installer default for Nvidia)
-
-This is the command to install pytorch nightly instead which has a python 3.12 package and might have performance improvements:
-
-`pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu121`
-
-#### Dependencies
-
-Install the dependencies by opening your terminal inside the ComfyUI folder and:
-
-`pip install -r requirements.txt`
+3. Upgrade ComfyUI dependencies by running this command (inside ComfyUI folder):  
+   `pip install --upgrade -r requirements.txt`
 
 After this you should have everything installed and can proceed to running ComfyUI.
 
-#### Troubleshooting
+# Troubleshooting
 
 If you get the "Torch not compiled with CUDA enabled" error, uninstall torch with:
 
