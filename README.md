@@ -7,13 +7,26 @@ Tested on Arch + AMD GPU.
 
 # Quick Start
 
+Make sure to install for your GPU Vendor (AMD/Nvidia):
+
+```
+git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer
+cd ComfyUI-Installer
+./install.sh --amd/nvidia --make-menu-entry # AMD or Nvidia, along with optional menu entry
+cd ComfyUI
+
+./ComfyUI # Launch
+```
+
+# Installation
+
 1. To install ComfyUI using this script, **clone this repo and cd into it**:  
    `git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer && cd ComfyUI-Installer`
 
 2. After that is completed, install for either AMD or Nvidia.  
    **To install for AMD:** `./install.sh --amd`  
    **To install for Nvidia:** `./install.sh --nvidia`  
-   *Tip:* You can optionally add `--make-menu-entry` after your GPU vendor in order to make a desktop entry.  
+   _Tip:_ You can optionally add `--make-menu-entry` after your GPU vendor in order to make a desktop entry.
 
 3. Almost done! You can now get your models and put them in their proper directories:  
    Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`  
@@ -31,7 +44,7 @@ Simply cd into the ComfyUI folder and run git pull:
 ### Upgrading python venv packages
 
 **Note:** pytorch stable does not support python 3.12 yet. If you have python 3.12 you will have to use the nightly version of pytorch. If you run into issues you should try python 3.11 instead.  
-**Make sure to check out the actual [ComfyUI repo](https://github.com/comfyanonymous/ComfyUI) for anything else important**  
+**Make sure to check out the actual [ComfyUI repo](https://github.com/comfyanonymous/ComfyUI) for anything else important**
 
 1. While in the ComfyUI folder, run `source comfy-venv/bin/activate` in order to access the python venv.  
    (The installer creates the python venv inside the ComfyUI folder by default.)
