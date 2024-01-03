@@ -1,9 +1,9 @@
 [Desktop Entry]
 Name=ComfyUI
-Path=/home/user/ComfyUI/
-Exec=ComfyUI
+Path=COMFYPATH/ComfyUI/
+Exec=COMFYPATH/ComfyUI/ComfyUI
 Comment=A powerful and modular stable diffusion GUI with a graph/nodes interface.
 Terminal=true
-Icon=comfyui.svg
+Icon=COMFYPATH/pictures/comfyui.svg
 Type=Application
 NoDisplay=false
