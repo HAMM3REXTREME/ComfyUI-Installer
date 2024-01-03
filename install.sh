@@ -9,6 +9,7 @@ readonly pip_nvidia="torch torchvision torchaudio --extra-index-url https://down
 readonly comfyui_repo="https://github.com/comfyanonymous/ComfyUI.git" # ComfyUI GitHub Repo
 readonly comfyui_folder_name="ComfyUI" # Folder in which to clone ComfyUI Repo
 
+
 printf "This script will install ComfyUI. Tested on Arch + AMD GPU.\n"
 printf "Make sure you have all the GPU packages needed along with git, python and pip.\n"
 
@@ -40,9 +41,11 @@ main_install () {
 }
 
 menu_icon () {
-    pwdesc=$(echo $PWD | sed 's_/_\\/_g') # ComfyUI path with escaped forward-slashes
-    cp ComfyUI.desktop $HOME/.local/share/applications/
-    sed -i -e "s/COMFYPATH/$pwdesc/g" $HOME/.local/share/applications/ComfyUI.desktop # Update path placeholder inside file
+    folder_path="$PWD/$comfyui_folder_name" # ComfyUI folder
+    exec_path="$PWD/$comfyui_folder_name/ComfyUI" # Exec
+    icon_path="$PWD/pictures/comfyui.svg" # ComfyUI Icon
+
+    desktop-file-install --dir="$HOME/.local/share/applications/" --set-key=Path --set-value="$folder_path" --set-key=Exec --set-value="$exec_path" --set-icon="$icon_path" ComfyUI.desktop
 }
 
 
