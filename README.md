@@ -12,7 +12,8 @@ Tested on Arch + AMD GPU.
 
 2. After that is completed, install for either AMD or Nvidia.  
    **To install for AMD:** `./install.sh --amd`  
-   **To install for Nvidia:** `./install.sh --nvidia`
+   **To install for Nvidia:** `./install.sh --nvidia`  
+   *Tip:* You can optionally add `--make-menu-entry` after your GPU vendor in order to make a desktop entry.  
 
 3. Almost done! You can now get your models and put them in their proper directories:  
    Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`  
