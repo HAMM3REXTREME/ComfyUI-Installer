@@ -1,11 +1,12 @@
 #!/bin/sh
+# ComfyUI-Installer main install script.
 
-# Pip packages depend on GPU vendor. You might want to try using an updated or nightly version here if ComfyUI is not working for you. 
-readonly pip_amd="torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.6"
+# pip packages depend on your GPU vendor. You might want to try using an updated or nightly version here if ComfyUI is not working for you. 
+readonly pip_amd="torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.7"
 readonly pip_nvidia="torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121 xformers"
 
-readonly comfyui_repo="https://github.com/comfyanonymous/ComfyUI.git" # ComfyUI GitHub Repo
-readonly comfyui_folder_name="ComfyUI" # Folder in which to clone ComfyUI Repo
+readonly comfyui_repo="https://github.com/comfyanonymous/ComfyUI.git" # ComfyUI GitHub repository
+readonly comfyui_folder_name="ComfyUI" # ComfyUI repository folder name
 
 
 
@@ -13,7 +14,7 @@ printf "Make sure you have all the GPU packages needed along with git, python an
 
 
 
-# Installer
+# Installer - does the actual installing
 main_install () {
     printf "\033[0;33mInfo:\033[m Cloning ComfyUI git repo...\n"
     git clone "$comfyui_repo" "$comfyui_folder_name"
@@ -38,6 +39,7 @@ main_install () {
 }
 
 menu_icon () {
+    # Make paths match our clone location
     folder_path="$PWD/$comfyui_folder_name" # ComfyUI folder
     exec_path="$PWD/$comfyui_folder_name/ComfyUI" # Exec
     icon_path="$PWD/pictures/comfyui.svg" # ComfyUI Icon
@@ -50,11 +52,11 @@ menu_icon () {
 # Pre-install checks
 if ! command -v git python pip >/dev/null 2>&1
 then
-    printf "\033[0;31mError:\033[0m Please install git, python and pip in order to continue.\n"
+    printf "\033[0;31mError:\033[0m Please install git, python and pip in order to continue.\n Also make sure you have the correct GPU specific packages installed.\n"
     exit
 fi
 
-# GPU Vendors
+# GPU vendor selection
 if [ "$1" = "--amd" ]
 then
     printf "\033[0;33mInfo:\033[m Installing for \033[0;31mAMD\033[m GPU...\n"
@@ -71,6 +73,7 @@ else
     exit
 fi
 
+# Make a desktop entry if the user asked for it.
 if [ "$2" = "--make-menu-entry" ]
 then
     printf "\033[0;33mInfo:\033[m Making a menu entry for ComfyUI...\n"
