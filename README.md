@@ -4,6 +4,7 @@ Easily install ComfyUI (in a python venv) on Linux.
 Tested on Arch + AMD GPU.
 
 ![ComfyUI Screenshot](pictures/comfyui_screenshot.png)
+_Note:_ This is not the official ComfyUI icon.    
 
 # Quick Start
 
