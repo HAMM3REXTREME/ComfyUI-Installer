@@ -2,8 +2,8 @@
 # ComfyUI-Installer main install script.
 
 # pip packages depend on your GPU vendor. You might want to try using an updated or nightly version here if ComfyUI is not working for you. 
-readonly pip_amd="torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.7"
-readonly pip_nvidia="torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121 xformers"
+readonly pip_amd="torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.0"
+readonly pip_nvidia="torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121"
 
 readonly comfyui_repo="https://github.com/comfyanonymous/ComfyUI.git" # ComfyUI GitHub repository
 readonly comfyui_folder_name="ComfyUI" # ComfyUI repository folder name
