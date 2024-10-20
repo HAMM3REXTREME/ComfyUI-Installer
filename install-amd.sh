@@ -1,5 +1,5 @@
-#!/bin/sh
-# Install script for AMD cards.
+#!/usr/bin/env bash
+# ComfyUI installer script for AMD cards.
 set -e
 
 printf "\033[0;33mInfo:\033[m Installing for AMD hardware. Make sure git, python and pip are installed.\n"
@@ -10,7 +10,9 @@ python -m venv venv
 source venv/bin/activate
 
 printf "\033[0;33mInfo:\033[m Installing python venv dependencies for AMD...\n"
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.0 # You might want to try using an updated or nightly version here if ComfyUI is not working for you.
+# You might want to try using a newer or nightly version here if ComfyUI is not working for you.
+# pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm6.2
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.1
 pip install -r ComfyUI/requirements.txt
 
 printf "Launch using 'launch.sh' script.\n"
