@@ -23,16 +23,16 @@ cd ComfyUI-Installer
 1. To install ComfyUI using this script, **clone this repo and cd into it**:  
    `git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer && cd ComfyUI-Installer`
 
-2. After that is completed, install for either AMD or Nvidia.  
+2. After that's done, run the install script for your GPU vendor (AMD or Nvidia). This might take a while.  
    **To install for AMD:** `./install-amd.sh`  
    **To install for Nvidia:** `./install-nvidia.sh`  
-   _Tip:_ You can optionally add `--menu-entry` after your GPU vendor in order to make a desktop entry.
+   _Tip:_ You can optionally add `--menu-entry` as an argument in order to make a desktop menu entry.
 
-3. Almost done! You can now get your models and put them in their proper directories:  
+3. When the install script has finished, you just need to copy/paste your models into their proper directories:  
    Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`  
    Put your VAE in: `ComfyUI/models/vae`
 
-Once that is done, **launch ComfyUI using**: `./launch.sh`
+Once you've done that, **launch ComfyUI using**: `./launch.sh`
 
 # Updating
 
@@ -50,8 +50,8 @@ Simply cd into the ComfyUI folder and run git pull:
    (The installer creates a python venv named 'venv' in the base folder by default)
 
 2. Upgrade torch, use the command for your GPU vendor (similar to the installer script):  
-   **For AMD:** `pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.0`  
-   **For Nvidia:** `pip install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121`  
+   **For AMD:** `pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.1`  
+   **For Nvidia:** `pip install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124`  
    _Some version numbers might be out of date here._
 
 3. Upgrade ComfyUI dependencies by running this command (inside the ComfyUI folder):  
@@ -61,16 +61,18 @@ After this you should have everything updated and can proceed to running ComfyUI
 
 # Troubleshooting
 
-If you get the "Torch not compiled with CUDA enabled" error, uninstall torch with:
+### If you get the "Torch not compiled with CUDA enabled" error:
+Uninstall torch with:
 
 `pip uninstall torch`
 
-And install it again with the command above.
+And install it again with the command (for Nvidia) above.
 
-For AMD cards not officially supported by ROCm,
+### For AMD cards not officially supported by ROCm:
 Try running it with this command if you have issues:
 
 For 6700, 6600 and maybe other RDNA2 or older: `HSA_OVERRIDE_GFX_VERSION=10.3.0 python main.py`
-This is the done by default in the launch script. Feel free to remove/edit it if you want.
 
 For AMD 7600 and maybe other RDNA3 cards: `HSA_OVERRIDE_GFX_VERSION=11.0.0 python main.py`
+
+You can add these changes (and other args you want) to `launch.sh` for convenience.
