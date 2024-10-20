@@ -54,8 +54,8 @@ Simply cd into the ComfyUI folder and run git pull:
    **For Nvidia:** `pip install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124`  
    _Some version numbers might be out of date here._
 
-3. Upgrade ComfyUI dependencies by running this command (inside the ComfyUI folder):  
-   `pip install --upgrade -r requirements.txt`
+3. Upgrade ComfyUI dependencies by running this command:  
+   `pip install --upgrade -r ComfyUI/requirements.txt`
 
 After this you should have everything updated and can proceed to running ComfyUI.
 
