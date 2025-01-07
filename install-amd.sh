@@ -6,7 +6,7 @@ printf "\033[0;33mInfo:\033[m Installing for AMD hardware. Make sure git, python
 
 git clone https://github.com/comfyanonymous/ComfyUI.git
 
-python -m venv venv
+python3.12 -m venv venv
 source venv/bin/activate
 
 printf "\033[0;33mInfo:\033[m Installing python venv dependencies for AMD...\n"
