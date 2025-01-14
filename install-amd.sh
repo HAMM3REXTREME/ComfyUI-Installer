@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# ComfyUI installer script for AMD cards.
+# Install - AMD
 set -e
+printf "Installing for \033[0;31mAMD\033[m, "
 source ./python-version.sh
 
 git clone https://github.com/comfyanonymous/ComfyUI.git

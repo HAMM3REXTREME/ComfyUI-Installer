@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# ComfyUI installer script for Nvidia cards.
+# Install - Nvidia
 set -e
+printf "Installing for \033[0;32mNvidia\033[m, "
 source ./python-version.sh
 
 git clone https://github.com/comfyanonymous/ComfyUI.git
