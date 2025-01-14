@@ -3,6 +3,7 @@
 set -e
 
 printf "\033[0;33mInfo:\033[m Installing for Nvidia hardware. Make sure git, python and pip are installed.\n"
+source ./pyenv.sh
 
 git clone https://github.com/comfyanonymous/ComfyUI.git
 
