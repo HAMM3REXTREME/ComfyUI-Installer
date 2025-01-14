@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ComfyUI-Installer launcher script.
+# ComfyUI installer - launch script
 set -e
 args=$@ # Command line arguments passed by the user
 source venv/bin/activate # venv would have the correct python version

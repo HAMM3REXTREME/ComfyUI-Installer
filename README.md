@@ -13,9 +13,9 @@ Make sure to install for your GPU Vendor (AMD/Nvidia):
 ```
 git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer
 cd ComfyUI-Installer
-./install-amd.sh or ./install-nvidia.sh # Optionally add --menu-entry
-
-./launch.sh # Launch
+./install-amd.sh or ./install-nvidia.sh
+./menu-entry.sh # Optionally add menu entry.
+./launch.sh
 ```
 
 # Installation
@@ -26,7 +26,7 @@ cd ComfyUI-Installer
 2. After that's done, run the install script for your GPU vendor (AMD or Nvidia). This might take a while.  
    **To install for AMD:** `./install-amd.sh`  
    **To install for Nvidia:** `./install-nvidia.sh`  
-   _Tip:_ You can optionally add `--menu-entry` as an argument in order to make a desktop menu entry.
+   _Tip:_ You can optionally run `./menu-entry.sh` in order to make a desktop menu entry.
 
 3. When the install script has finished, you just need to copy/paste your models into their proper directories:  
    Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`  
@@ -49,8 +49,8 @@ Simply cd into the ComfyUI folder and run git pull:
 1. Run `source venv/bin/activate` to activate the Python virtual environment.  
    (The installer creates a python venv named 'venv' in the base folder by default)
 
-2. Upgrade torch, use the command for your GPU vendor (similar to the installer script):  
-   **For AMD:** `pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.1`  
+2. Upgrade torch, use the command for your GPU vendor (similar to the install script):  
+   **For AMD:** `pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2`  
    **For Nvidia:** `pip install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124`  
    _Some version numbers might be out of date here._
 
