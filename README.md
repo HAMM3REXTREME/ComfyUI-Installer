@@ -3,15 +3,15 @@
 Easily install ComfyUI (in a python venv) on Linux.
 Tested on Arch + AMD GPU.
 
-![ComfyUI Screenshot](pictures/comfyui_screenshot.png)
-_Note:_ This is not the official ComfyUI icon.    
+![ComfyUI Screenshot](graphics/comfyui_screenshot.png)
+_Note:_ This is not the official ComfyUI icon.  
 
-# Quick Start
+## Quick Start
 
 You will need to have `python`, `pyenv` and `pip` on your system.
 Make sure to install for your GPU Vendor (AMD/Nvidia):
 
-```
+```sh
 git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer
 cd ComfyUI-Installer
 ./install-amd.sh or ./install-nvidia.sh
@@ -19,7 +19,7 @@ cd ComfyUI-Installer
 ./launch.sh
 ```
 
-# Installation
+## Installation
 
 1. To install ComfyUI using this script, **clone this repo and cd into it**:  
    `git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer && cd ComfyUI-Installer`
@@ -35,7 +35,7 @@ cd ComfyUI-Installer
 
 Once you've done that, **launch ComfyUI using**: `./launch.sh`
 
-# Updating
+## Updating
 
 ### Updating ComfyUI
 
@@ -43,7 +43,6 @@ Simply cd into the ComfyUI folder and run git pull:
 `cd ComfyUI && git pull`
 
 ### Upgrading python venv packages
-
 
 **Make sure to check out the actual [ComfyUI repo](https://github.com/comfyanonymous/ComfyUI) for the most up to date information.**
 
@@ -60,16 +59,18 @@ Simply cd into the ComfyUI folder and run git pull:
 
 After this you should have everything updated and can proceed to running ComfyUI.
 
-# Troubleshooting
+## Troubleshooting
 
-### If you get the "Torch not compiled with CUDA enabled" error:
+### If you get the "Torch not compiled with CUDA enabled" error
+
 Uninstall torch with:
 
 `pip uninstall torch`
 
 And install it again with the command (for Nvidia) above.
 
-### For AMD cards not officially supported by ROCm:
+### For AMD cards not officially supported by ROCm
+
 Try running it with this command if you have issues:
 
 For 6700, 6600 and maybe other RDNA2 or older: `HSA_OVERRIDE_GFX_VERSION=10.3.0 python main.py`
