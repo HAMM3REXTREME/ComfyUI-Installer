@@ -15,11 +15,17 @@ Make sure to install for your GPU Vendor (AMD/Nvidia):
 ```sh
 git clone https://github.com/itsdarklikehell/ComfyUI-Installer
 cd ComfyUI-Installer
-sudo ./install.sh --amd for AMD
-sudo ./install.sh --nvidia for Nvidia
-./scripts/menu-entry.sh # Optionally add menu entry
-./scripts/run_gpu.sh or ./scripts/run_cpu.sh # Run ComfyUI
-./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh # Run ComfyUIMini
+./install.sh --amd for AMD
+./install.sh --nvidia for Nvidia
+./scripts/menu-entry.sh # Optionally add menu entry.
+bash ./scripts/run_gpu.sh # To manually run ComfyUI on GPU. (install.sh creates these .sh files during the installation process.)
+bash ./scripts/run_cpu.sh # To manually run ComfyUI on CPU. (install.sh creates these .sh files during the installation process.)
+bash ./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh # To manually run ComfyUIMini.
+
+systemctl --user start ComfyUI # To start ComfyUI Service. (install.sh creates these service files during the installation process.)
+systemctl --user start ComfyUIMini # To start ComfyUIMini Service. (install.sh creates these service files during the installation process.)
+systemctl --user enable ComfyUI # To enable ComfyUI Service. (install.sh creates these files service during the installation process.)
+systemctl --user enable ComfyUIMini # To enable ComfyUIMini Service. (install.sh creates these service files during the installation process.)
 ```
 
 ## Installation
@@ -48,20 +54,20 @@ To check ComfyUIMini's status, run: `tail -f ComfyUI/custom_nodes/ComfyUIMini/lo
 **To Manually launch ComfyUI use**: `bash ./scripts/run_gpu.sh` or `./scripts/run_cpu.sh`.
 **To Manually launch ComfyUIMini use**: `bash ./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh`.
 
-**To start ComfyUI systemd service use**: `sudo systemctl start ComfyUI.service`.
-**To start ComfyUIMini systemd service use**: `sudo systemctl start ComfyUIMini.service`.
+**To start ComfyUI systemd service use**: `systemctl --user start ComfyUI.service`.
+**To start ComfyUIMini systemd service use**: `systemctl start ComfyUIMini.service`.
 
-**To enable ComfyUI systemd service use**: `sudo systemctl enable ComfyUI.service`.
-**To enable ComfyUIMini systemd service use**: `sudo systemctl enable ComfyUIMini.service`.
+**To enable ComfyUI systemd service use**: `systemctl enable ComfyUI.service`.
+**To enable ComfyUIMini systemd service use**: `systemctl enable ComfyUIMini.service`.
 
-**To stop ComfyUI systemd service use**: `sudo systemctl stop ComfyUI.service`.
-**To stop ComfyUIMini systemd service use**: `sudo systemctl stop ComfyUIMini.service`.
+**To stop ComfyUI systemd service use**: `systemctl stop ComfyUI.service`.
+**To stop ComfyUIMini systemd service use**: `systemctl stop ComfyUIMini.service`.
 
-**To restart ComfyUI systemd service use**: `sudo systemctl restart ComfyUI.service`.
-**To restart ComfyUIMini systemd service use**: `sudo systemctl restart ComfyUIMini.service`.
+**To restart ComfyUI systemd service use**: `systemctl restart ComfyUI.service`.
+**To restart ComfyUIMini systemd service use**: `systemctl restart ComfyUIMini.service`.
 
-**To check ComfyUI systemd service status use**: `sudo systemctl status ComfyUI.service`.
-**To check ComfyUIMini systemd service status use**: `sudo systemctl status ComfyUIMini.service`.
+**To check ComfyUI systemd service status use**: `systemctl status ComfyUI.service`.
+**To check ComfyUIMini systemd service status use**: `systemctl status ComfyUIMini.service`.
 
 ## Updating
 

@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 set -e
-if [[ $EUID -ne 0 ]]; then
-    echo "This script must be run as root"
-    exit 1
-fi
 if [ "$1" == "--help" ]; then
     printf "[*] Usage: install.sh --amd or install.sh --nvidia\n"
     printf "[*] Example: install.sh --nvidia\n"
@@ -27,8 +23,8 @@ export COMFYUI_INSTALLER_DIR=$PWD
 export BACKUP_DIR=/media/$USER/DATA/ai-stuff
 export COMFYUI_DIR=$PWD/ComfyUI
 export VIRTUAL_ENV=$PWD/ComfyUI/venv
-export COMFYUI_SERVICE=$PWD/scripts/ComfyUI.service
-export COMFYUI_MINI_SERVICE=$PWD/scripts/ComfyUIMini.service
+export COMFYUI_SERVICE=$HOME/.config/systemd/user/ComfyUI.service
+export COMFYUI_MINI_SERVICE=$HOME/.config/systemd/user/ComfyUIMini.service
 EOF
     source .settings
 else
@@ -117,7 +113,7 @@ ExecStart=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
 WantedBy=multi-user.target
 EOF
     printf "[*] [\033[0;32mComfyUI.service\033[m] file created, now adding to systemd.\n"
-    sudo cp "$COMFYUI_SERVICE" /etc/systemd/system/
+    # sudo cp "$COMFYUI_SERVICE" /etc/systemd/system/
 
     printf "[*] Creating [\033[0;32mComfyUIMini.service\033[m] file.\n"
     cat <<EOF >"$COMFYUI_MINI_SERVICE"
@@ -136,9 +132,7 @@ ExecStart=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/start.
 WantedBy=multi-user.target
 EOF
     printf "[*] [\033[0;32mComfyUIMini.service\033[m] file created, now adding to systemd.\n"
-    sudo cp "$COMFYUI_MINI_SERVICE" /etc/systemd/system/
-
-    sudo systemctl daemon-reload
+    # sudo cp "$COMFYUI_MINI_SERVICE" /etc/systemd/system/
 }
 
 INSTALL_COMFYUI "$1"
@@ -147,7 +141,7 @@ INSTALL_COMFYUI "$1"
 CREATE_SERVICES
 
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
-chmod +x "$COMFYUI_INSTALLER_DIR/ComfyUIMini/scripts/"*.sh
+chmod +x "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/"*.sh
 
 printf "\033[32mFinished!\033[0m\n\n"
 printf "\033[32mTo Launch ComfyUI manually, use: 'scripts/run_gpu.sh' or 'scripts/run_cpu.sh' \033[0m\n"
@@ -161,8 +155,8 @@ printf "\033[32mTo view the logs of ComfyUI, run: 'multitail -f ComfyUI/user/com
 printf "\033[32mTo view the logs of ComfyUI, run: 'sudo journalctl -f -u ComfyUI.service' \033[0m\n"
 printf "\033[32mTo view the logs of ComfyUIMini, run: 'sudo journalctl -f -u ComfyUIMini.service' \033[0m\n\n"
 
-sudo systemctl start ComfyUI.service
-sudo systemctl start ComfyUIMini.service
+systemctl --user start ComfyUI.service
+systemctl --user start ComfyUIMini.service
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:8188' for ComfyUI \033[0m\n"
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:3000' for ComfyUIMini \033[0m\n"
 

@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
-if [ ! -f .settings ]; then
-    cat <<EOF >.settings
-export GPU=$GPU
-export COMFYUI_INSTALLER_DIR=$PWD
-export BACKUP_DIR=/media/$USER/DATA/ai-stuff
-export COMFYUI_DIR=$PWD/ComfyUI
-export VIRTUAL_ENV=$PWD/ComfyUI/venv
-export COMFYUI_SERVICE=$PWD/scripts/ComfyUI.service
-export COMFYUI_MINI_SERVICE=$PWD/scripts/ComfyUIMini.service
-EOF
-    source .settings
-else
-    source .settings
-fi
+set -e
 if [ -d "$COMFYUI_INSTALLER_DIR/ComfyUI" ]; then
     printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
     cd "$COMFYUI_INSTALLER_DIR"/ComfyUI || exit 1
