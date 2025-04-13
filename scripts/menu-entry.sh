@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
-
-export COMFYUI_INSTALLER_DIR="/media/$USER/DATA/ComfyUI-Installer"
+if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
+    if [ ! -f ../.settings ]; then
+        printf "[!] Please run install.sh first!\n"
+    else
+        source ../.settings
+    fi
+fi
 
 # Make a menu entry
 exec_path="$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"   # Launch script

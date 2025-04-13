@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 set -e
+if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
+    if [ ! -f ../.settings ]; then
+        printf "[!] Please run install.sh first!\n"
+    else
+        source ../.settings
+    fi
+fi
 if [ -d "$COMFYUI_INSTALLER_DIR/ComfyUI" ]; then
     printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
     cd "$COMFYUI_INSTALLER_DIR"/ComfyUI || exit 1
