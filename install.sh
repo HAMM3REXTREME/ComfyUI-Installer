@@ -1,55 +1,52 @@
 #!/usr/bin/env bash
-if [ "$1" == "--amd" ]; then
-    printf "[!] [\033[0;32mAMD\033[m].\n"
-    GPU="amd"
-fi
-if [ "$1" == "--nvidia" ]; then
-    printf "[!] [\033[0;32mNvidia\033[m].\n"
-    GPU="nvidia"
-fi
-if [ -z "$1" ]; then
-    printf "[!] Please specify the GPU you want to use. Use --amd or --nvidia.\n"
+set -e
+if [ "$1" == "--help" ]; then
+    printf "[*] Usage: install.sh --amd or install.sh --nvidia\n"
+    printf "[*] Example: install.sh --nvidia\n"
+    printf "[*] Example: install.sh --amd\n"
+    exit 0
+elif [ "$1" == "--amd" ]; then
+    GPU="AMD"
+elif [ "$1" == "--nvidia" ]; then
+    GPU="NVIDIA"
+else
+    printf "[!] Invalid argument.\n\n"
+    printf "[*] Usage: install.sh --amd or install.sh --nvidia\n"
+    printf "[*] Example: install.sh --nvidia\n"
+    printf "[*] Example: install.sh --amd\n"
     exit 1
 fi
 if [ ! -f .settings ]; then
     cat <<EOF >.settings
-export COMFYUI_INSTALLER_DIR="$PWD"
-export BACKUP_DIR="/media/$USER/DATA/ai-stuff"
-export COMFYUI_DIR="$PWD/ComfyUI"
-export VIRTUAL_ENV="$PWD/ComfyUI/venv"
-export COMFYUI_SERVICE="$PWD/scripts/ComfyUI.service"
-export COMFYUI_MINI_SERVICE="$PWD/scripts/ComfyUIMini.service"
+export GPU=$GPU
+export COMFYUI_INSTALLER_DIR=$PWD
+export BACKUP_DIR=/media/$USER/DATA/ai-stuff
+export COMFYUI_DIR=$PWD/ComfyUI
+export VIRTUAL_ENV=$PWD/ComfyUI/venv
+export COMFYUI_SERVICE=$PWD/scripts/ComfyUI.service
+export COMFYUI_MINI_SERVICE=$PWD/scripts/ComfyUIMini.service
 EOF
     source .settings
 else
     source .settings
 fi
 
-# Install - Nvidia
-# set -e
-printf "[*] Installing for [\033[0;32mNvidia\033[m],\n"
-# source ./python-version.sh
-# ACTIVATE_VENV() {
-#     cd "$COMFYUI_INSTALLER_DIR/ComfyUI" || exit 1
-#     python -m venv "$VIRTUAL_ENV"
-#     source "$VIRTUAL_ENV"/bin/activate
-# }
 INSTALL_COMFYUI() {
-    if [ -d "$COMFYUI_DIR" ]; then
+    if [ -d ComfyUI ]; then
         printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
         git pull
     else
-        printf "[*] Installing [\033[0;32mComfyUI\033[m] and [\033[0;32mComfyUI-Manager\033[m]\n"
         # wget https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh
         # wget -O - https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh | bash
         # bash <(curl -Ls https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh)
         chmod +x scripts/*.sh
-        if [ "$GPU" == "nvidia" ]; then
-            printf "[*] Installing [\033[0;32mComfyUI\033[m] for [\033[0;32mNvidia\033[m]\n"
-            ./install-comfyui-nvidia-venv-linux.sh >/dev/null 2>&1
-        elif [ "$GPU" == "amd" ]; then
-            printf "[*] Installing [\033[0;32mComfyUI\033[m] for [\033[0;32mAMD\033[m]\n"
-            ./install-comfyui-amd-venv-linux.sh >/dev/null 2>&1
+        if [ "$GPU" == "NVIDIA" ]; then
+            printf "[*] Installing [\033[0;32mComfyUI\033[m], [\033[0;32mComfyUI-Manager\033[m] and [\033[0;32mComfyUIMini\033[m] for [\033[0;32m$GPU\033[m]\n"
+            ./scripts/install-comfyui-nvidia-venv-linux.sh >/dev/null 2>&1
+        fi
+        if [ "$GPU" == "AMD" ]; then
+            printf "[*] Installing [\033[0;32mComfyUI\033[m], [\033[0;32mComfyUI-Manager\033[m] and [\033[0;32mComfyUIMini\033[m] for [\033[0;32m$GPU\033[m]\n"
+            ./scripts/install-comfyui-amd-venv-linux.sh >/dev/null 2>&1
         fi
     fi
 }
@@ -96,14 +93,6 @@ LINKING_DIRS() {
     ln -s "$BACKUP_DIR/input" ComfyUI
     ln -s "$BACKUP_DIR/custom_nodes" ComfyUI
 }
-# INSTALL_REQUIREMENTS() {
-#     ACTIVATE_VENV
-#     find "$COMFYUI_DIR/" -name "requirements.txt" -exec printf "[*] Installing: [\033[0;32m%s\033[m]\n" {} \; -exec pip install -q -r {} \;
-#     find "$COMFYUI_DIR/custom_nodes/" -name "requirements.txt" -exec printf "[*] Installing: [\033[0;32m%s\033[m]\n" {} \; -exec pip install -q -r {} \;
-
-#     pip uninstall -q -y opencv-contrib-python
-#     pip install -q opencv-contrib-python
-# }
 CREATE_SERVICES() {
     printf "[*] Creating [\033[0;32mComfyUI.service\033[m] file.\n"
     cat <<EOF >"$COMFYUI_SERVICE"
@@ -148,8 +137,8 @@ EOF
     sudo systemctl daemon-reload
 }
 
-INSTALL_COMFYUI
-LINKING_DIRS
+INSTALL_COMFYUI "$1"
+# LINKING_DIRS
 # INSTALL_REQUIREMENTS
 CREATE_SERVICES
 
@@ -173,9 +162,9 @@ sudo systemctl start ComfyUIMini.service
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:8188' for ComfyUI \033[0m\n"
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:3000' for ComfyUIMini \033[0m\n"
 
-xdg-open http://0.0.0.0:3000
-xdg-open http://0.0.0.0:8188
-sudo journalctl -f -u ComfyUI.service
+# xdg-open http://0.0.0.0:3000
+# xdg-open http://0.0.0.0:8188
+# sudo journalctl -f -u ComfyUI.service
 # if command -v multitail 2>&1 >/dev/null; then
 #     multitail -f "$COMFYUI_INSTALLER_DIR/ComfyUI/user/comfyui.log"
 # elif command -v tail 2>&1 >/dev/null; then

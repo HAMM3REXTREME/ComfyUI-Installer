@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 if [ ! -f .settings ]; then
     cat <<EOF >.settings
-export COMFYUI_INSTALLER_DIR="$PWD"
-export BACKUP_DIR="/media/$USER/DATA/ai-stuff"
-export COMFYUI_DIR="$PWD/ComfyUI"
-export VIRTUAL_ENV="$PWD/ComfyUI/venv"
-export COMFYUI_SERVICE="$PWD/scripts/ComfyUI.service"
-export COMFYUI_MINI_SERVICE="$PWD/scripts/ComfyUIMini.service"
+export GPU=$GPU
+export COMFYUI_INSTALLER_DIR=$PWD
+export BACKUP_DIR=/media/$USER/DATA/ai-stuff
+export COMFYUI_DIR=$PWD/ComfyUI
+export VIRTUAL_ENV=$PWD/ComfyUI/venv
+export COMFYUI_SERVICE=$PWD/scripts/ComfyUI.service
+export COMFYUI_MINI_SERVICE=$PWD/scripts/ComfyUIMini.service
 EOF
     source .settings
 else
