@@ -193,20 +193,24 @@ chmod +x "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/"*.sh
 
 printf "\033[32mFinished!\033[0m\n\n"
 printf "\033[32mTo Launch ComfyUI manually, use: 'scripts/run_gpu.sh' or 'scripts/run_cpu.sh' \033[0m\n"
-printf "\033[32mTo launch ComfyUIMini manually, use: 'ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh' \033[0m\n\n"
+printf "\033[32mTo Launch ComfyUIMini manually, use: 'ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh' \033[0m\n\n"
+
 printf "\033[32mTo start ComfyUI as systemd service, run: 'sudo systemctl start ComfyUI.service' \033[0m\n"
 printf "\033[32mTo start ComfyUIMini as systemd service, run: 'sudo systemctl start ComfyUIMini.service' \033[0m\n\n"
+
 printf "\033[32mTo enable ComfyUI service at boot, run: 'sudo systemctl enable ComfyUI.service' \033[0m\n"
 printf "\033[32mTo enable ComfyUIMini service at boot, run: 'sudo systemctl enable ComfyUIMini.service' \033[0m\n\n"
-printf "\033[32mTo view the logs of ComfyUI, run: 'tail -f ComfyUI/user/comfyui.log' \033[0m\n"
-printf "\033[32mTo view the logs of ComfyUI, run: 'multitail -f ComfyUI/user/comfyui.log' \033[0m\n\n"
-printf "\033[32mTo view the logs of ComfyUI, run: 'journalctl -f -u ComfyUI.service' \033[0m\n"
-printf "\033[32mTo view the logs of ComfyUIMini, run: 'journalctl -f -u ComfyUIMini.service' \033[0m\n\n"
 
 printf "\033[32mStarting the ComfyUI.service now.' \033[0m\n"
 sudo systemctl start ComfyUI
 printf "\033[32mStarting the ComfyUIMini.service now.' \033[0m\n"
 sudo systemctl start ComfyUIMini
+
+printf "\033[32mTo view the logs of ComfyUI, run: 'multitail -f ComfyUI/user/comfyui.log' \033[0m\n\n"
+printf "\033[32mTo view the logs of ComfyUI, run: 'journalctl -f -u ComfyUI.service' \033[0m\n"
+
+printf "\033[32mTo view the logs of ComfyUIMini, run: 'journalctl -f -u ComfyUIMini.service' \033[0m\n\n"
+
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:8188' for ComfyUI \033[0m\n"
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:3000' for ComfyUIMini \033[0m\n"
 
