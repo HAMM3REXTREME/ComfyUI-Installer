@@ -1,34 +1,84 @@
 #!/usr/bin/env bash
-set -e
-if [ "$1" == "--help" ]; then
-    printf "[*] Usage: install.sh --amd or install.sh --nvidia\n"
-    printf "[*] Example: install.sh --nvidia\n"
-    printf "[*] Example: install.sh --amd\n"
-    exit 0
-elif [ "$1" == "--amd" ]; then
-    GPU="AMD"
-elif [ "$1" == "--nvidia" ]; then
-    GPU="NVIDIA"
-else
-    printf "[!] Invalid argument.\n\n"
-    printf "[*] Usage: install.sh --amd or install.sh --nvidia\n"
-    printf "[*] Example: install.sh --nvidia\n"
-    printf "[*] Example: install.sh --amd\n"
-    exit 1
-fi
-if [ ! -f .settings ]; then
+# set -e
+COMFYUI_INSTALLER_DIR=""
+COMFYUI_DIR=""
+GPU=""
+VIRTUAL_ENV=""
+
+INST_DEPS() {
+    if ! command -v whiptail 2>&1 >/dev/null; then
+        printf "[*] Installing [\033[0;32mwhiptail\033[m].\n"
+        sudo apt update
+        sudo apt install whiptail -y
+    fi
+    if ! command -v git 2>&1 >/dev/null; then
+        printf "[*] Installing [\033[0;32mgit\033[m].\n"
+        sudo apt update
+        sudo apt install git -y
+    fi
+    if ! command -v python3 2>&1 >/dev/null; then
+        printf "[*] Installing [\033[0;32mpython3\033[m].\n"
+        sudo apt update
+        sudo apt install python3 python3-venv -y
+    fi
+    if ! command -v xterm 2>&1 >/dev/null; then
+        printf "[*] Installing [\033[0;32mxterm\033[m].\n"
+        sudo apt update
+        sudo apt install xterm -y
+    fi
+    if ! command -v multitail 2>&1 >/dev/null; then
+        printf "[*] Installing [\033[0;32mmultitail\033[m].\n"
+        sudo apt update
+        sudo apt install multitail -y
+    fi
+}
+
+CREATE_SETTINGS_FILE() {
+    DEF_COMFYUI_INSTALLER_DIR="$PWD"
+    DEF_COMFYUI_DIR="$PWD/ComfyUI"
+    DEF_GPU="NVIDIA"
+    DEF_VIRTUAL_ENV="$PWD/ComfyUI/venv"
+
+    if [ -z "$COMFYUI_INSTALLER_DIR" ]; then
+        COMFYUI_INSTALLER_DIR=$DEF_COMFYUI_INSTALLER_DIR
+    fi
+    if [ -z "$COMFYUI_DIR" ]; then
+        COMFYUI_DIR=$DEF_COMFYUI_DIR
+    fi
+    if [ -z "$GPU" ]; then
+        GPU=$DEF_GPU
+    fi
+    if [ -z "$VIRTUAL_ENV" ]; then
+        VIRTUAL_ENV=$DEF_VIRTUAL_ENV
+    fi
+
     cat <<EOF >.settings
-export GPU=$GPU
+# The directory where the installer is located.
 export COMFYUI_INSTALLER_DIR=$PWD
-export BACKUP_DIR=/media/$USER/DATA/ai-stuff
+
+# The directory where the ComfyUI is located.
 export COMFYUI_DIR=$PWD/ComfyUI
+
+# The gpu to use.
+export GPU=$GPU
+
+# The directory where the backups are located.
+export BACKUP_DIR=/media/$USER/DATA/ai-stuff
+
+# The virtual environment directory.
 export VIRTUAL_ENV=$PWD/ComfyUI/venv
 EOF
+    printf "[*] Created [\033[0;32m.settings\033[m] file with the following contents:\n\n"
+    cat .settings
+}
+if [ ! -f .settings ]; then
+    printf "[*] [\033[0;32m.settings\033[m] file not found, creating.\n"
+    CREATE_SETTINGS_FILE
     source .settings
 else
+    printf "[*] [\033[0;32m.settings\033[m] file found, loading.\n"
     source .settings
 fi
-
 INSTALL_COMFYUI() {
     if [ -d ComfyUI ]; then
         printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
@@ -39,11 +89,11 @@ INSTALL_COMFYUI() {
         # bash <(curl -Ls https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh)
         chmod +x scripts/*.sh
         if [ "$GPU" == "NVIDIA" ]; then
-            printf "[*] Installing [\033[0;32mComfyUI\033[m], [\033[0;32mComfyUI-Manager\033[m] and [\033[0;32mComfyUIMini\033[m] for [\033[0;32m$GPU\033[m]\n"
+            printf "\n[*] Installing [\033[0;32mComfyUI\033[m], [\033[0;32mComfyUI-Manager\033[m] and [\033[0;32mComfyUIMini\033[m] for [\033[0;32m$GPU\033[m]\n"
             ./scripts/install-comfyui-nvidia-venv-linux.sh >/dev/null 2>&1
         fi
         if [ "$GPU" == "AMD" ]; then
-            printf "[*] Installing [\033[0;32mComfyUI\033[m], [\033[0;32mComfyUI-Manager\033[m] and [\033[0;32mComfyUIMini\033[m] for [\033[0;32m$GPU\033[m]\n"
+            printf "\n[*] Installing [\033[0;32mComfyUI\033[m], [\033[0;32mComfyUI-Manager\033[m] and [\033[0;32mComfyUIMini\033[m] for [\033[0;32m$GPU\033[m]\n"
             ./scripts/install-comfyui-amd-venv-linux.sh >/dev/null 2>&1
         fi
     fi
@@ -133,7 +183,8 @@ EOF
     sudo systemctl daemon-reload
 }
 
-INSTALL_COMFYUI "$1"
+INST_DEPS
+INSTALL_COMFYUI
 LINKING_DIRS
 CREATE_SERVICES
 
