@@ -1,63 +1,78 @@
 # ComfyUI Installer
 
-Easily install ComfyUI (in a python venv) on Linux.
+Easily install ComfyUI + ComfyUI-Manager + ComfyUIMini (in a python venv) on Linux.
 Tested on Arch + AMD GPU.
+Tested on Ubuntu + Nvidia GPU.
 
 ![ComfyUI Screenshot](graphics/comfyui_screenshot.png)
-_Note:_ This is not the official ComfyUI icon.  
+_Note:_ This is not the official ComfyUI icon.
 
 ## Quick Start
 
-You will need to have `python`, `pyenv` and `pip` on your system.
+You will need to have `python`, `python-venv` and `pip` on your system.
 Make sure to install for your GPU Vendor (AMD/Nvidia):
 
 ```sh
-git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer
+git clone https://github.com/itsdarklikehell/ComfyUI-Installer
 cd ComfyUI-Installer
-./install-amd.sh or ./install-nvidia.sh
-./menu-entry.sh # Optionally add menu entry
-./launch.sh
+./install.sh --amd for AMD
+./install.sh --nvidia for Nvidia
+./scripts/menu-entry.sh # Optionally add menu entry.
+bash ./scripts/run_gpu.sh # To manually run ComfyUI on GPU. (install.sh creates these .sh files during the installation process.)
+bash ./scripts/run_cpu.sh # To manually run ComfyUI on CPU. (install.sh creates these .sh files during the installation process.)
+bash ./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh # To manually run ComfyUIMini.
+
+sudo systemctl start ComfyUI # To start ComfyUI Service. (install.sh creates these service files during the installation process.)
+sudo systemctl start ComfyUIMini # To start ComfyUIMini Service. (install.sh creates these service files during the installation process.)
+sudo systemctl enable ComfyUI # To enable ComfyUI Service. (install.sh creates these files service during the installation process.)
+sudo systemctl enable ComfyUIMini # To enable ComfyUIMini Service. (install.sh creates these service files during the installation process.)
 ```
 
 ## Installation
 
-1. To install ComfyUI using this script, **clone this repo and cd into it**:  
-   `git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer && cd ComfyUI-Installer`
+1. To install ComfyUI using this script, **clone this repo and cd into it**:
+   `git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer`
 
-2. After that's done, run the install script for your GPU vendor (AMD or Nvidia). This might take a while.  
-   **To install for AMD:** `./install-amd.sh`  
-   **To install for Nvidia:** `./install-nvidia.sh`  
-   _Tip:_ You can optionally run `./menu-entry.sh` in order to make a desktop menu entry.
+2. After that's done, run the install script for your GPU vendor (AMD or Nvidia). This might take a while.
+   **To install for AMD:** `./install.sh --amd`
+   **To install for Nvidia:** `./install.sh --nvidia`
+   _Tip:_ Afterwards you can optionally run `./scripts/menu-entry.sh` in order to make a desktop menu entry.
 
-3. When the install script has finished, you just need to copy/paste your models into their proper directories:  
-   Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`  
+3. When the install script has finished, you just need to copy/paste your models into their proper directories:
+   Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`
    Put your VAE in: `ComfyUI/models/vae`
 
-Once you've done that, **launch ComfyUI using**: `./launch.sh`
+Once you've done that, ComfyUI and ComfyUIMini should be running on your system (give it a few seconds to start up).
+Then open your browser and go to: 
+[http://0.0.0.0:8188/](http://0.0.0.0:8188/) for ComfyUI's interface (Works better on desktop devices).
+[http://0.0.0.0:3000/](http://0.0.0.0:3000/) for ComfyUIMini's interface (Works better on mobile devices).
+To check ComfyUI's status, run: `tail -f ComfyUI/logs/comfyui.log` or `journalctl -f -u ComfyUI.service`
+To check ComfyUIMini's status, run: `tail -f ComfyUI/custom_nodes/ComfyUIMini/logs/comfyuimini.log` or `journalctl -f -u ComfyUIMini.service`
+
+## Usage
+
+**To Manually launch ComfyUI use**: `bash ./scripts/run_gpu.sh` or `./scripts/run_cpu.sh`.
+**To Manually launch ComfyUIMini use**: `bash ./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh`.
+
+**To start ComfyUI systemd service use**: `sudo systemctl start ComfyUI.service`.
+**To start ComfyUIMini systemd service use**: `sudo systemctl start ComfyUIMini.service`.
+
+**To enable ComfyUI systemd service use**: `sudo systemctl enable ComfyUI.service`.
+**To enable ComfyUIMini systemd service use**: `sudo systemctl enable ComfyUIMini.service`.
+
+**To stop ComfyUI systemd service use**: `sudo systemctl stop ComfyUI.service`.
+**To stop ComfyUIMini systemd service use**: `sudo ystemctl stop ComfyUIMini.service`.
+
+**To restart ComfyUI systemd service use**: `sudo systemctl restart ComfyUI.service`.
+**To restart ComfyUIMini systemd service use**: `sudo systemctl restart ComfyUIMini.service`.
+
+**To check ComfyUI systemd service status use**: `sudo systemctl status ComfyUI.service`.
+**To check ComfyUIMini systemd service status use**: `sudo systemctl status ComfyUIMini.service`.
 
 ## Updating
 
 ### Updating ComfyUI
-
-Simply cd into the ComfyUI folder and run git pull:  
-`cd ComfyUI && git pull`
-
-### Upgrading python venv packages
-
-**Make sure to check out the actual [ComfyUI repo](https://github.com/comfyanonymous/ComfyUI) for the most up to date information.**
-
-1. Run `source venv/bin/activate` to activate the Python virtual environment.  
-   (The installer creates a python venv named 'venv' in the base folder by default)
-
-2. Upgrade torch, use the command for your GPU vendor (similar to the install script):  
-   **For AMD:** `pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2`  
-   **For Nvidia:** `pip install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124`  
-   _Some version numbers might be out of date here._
-
-3. Upgrade ComfyUI dependencies by running this command:  
-   `pip install --upgrade -r ComfyUI/requirements.txt`
-
-After this you should have everything updated and can proceed to running ComfyUI.
+Simply re-run the install.sh script should detect that ComfyUI is allready installed, it will then proceed to try and update it. Or if it is already running you could use the ComfyUI-Manager to update everything.
 
 ## Troubleshooting
 
@@ -77,4 +92,4 @@ For 6700, 6600 and maybe other RDNA2 or older: `HSA_OVERRIDE_GFX_VERSION=10.3.0 
 
 For AMD 7600 and maybe other RDNA3 cards: `HSA_OVERRIDE_GFX_VERSION=11.0.0 python main.py`
 
-You can add these changes (and other args you want) to `launch.sh` for convenience.
+You can add these changes (and other args you want) to `scripts/run_gpu.sh` for convenience.
