@@ -89,8 +89,26 @@ INSTALL_COMFYUI() {
         chmod +x scripts/*.sh
         ./scripts/install-comfyui.sh >/dev/null 2>&1
         printf "[*] [\033[0;32mComfyUI\033[m] installed.\n"
-
     fi
+    printf "[*] Creating [\033[0;32mComfyUI.service\033[m] file.\n"
+    cat <<EOF >"scripts/ComfyUI.service"
+[Unit]
+Description=ComfyUI Service
+After=network.target
+
+[Service]
+Restart=on-failure
+RestartSec=5s
+Type=simple
+User=$USER
+Group=$USER
+WorkingDirectory=$COMFYUI_DIR
+ExecStart=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    sudo cp scripts/ComfyUI.service /etc/systemd/system/ComfyUI.service
 }
 
 INSTALL_COMFYUI_MANAGER() {
@@ -101,12 +119,8 @@ INSTALL_COMFYUI_MANAGER() {
     else
         printf "[*] Installing [\033[0;32mComfyUI-Manager\033[m].\n"
         chmod +x scripts/*.sh
-
         ./scripts/install-comfyui-manager.sh >/dev/null 2>&1
         printf "[*] [\033[0;32mComfyUI-Manager\033[m] installed.\n"
-
-        ./scripts/install-comfyui-mini.sh >/dev/null 2>&1
-        printf "[*] [\033[0;32mComfyUIMini\033[m] installed.\n"
     fi
 }
 INSTALL_COMFYUI_MINI() {
@@ -122,6 +136,23 @@ INSTALL_COMFYUI_MINI() {
         ./scripts/install-comfyui-mini.sh >/dev/null 2>&1
         printf "[*] [\033[0;32mComfyUIMini\033[m] installed.\n"
     fi
+    printf "[*] Creating [\033[0;32mComfyUIMini.service\033[m] file.\n"
+    cat <<EOF >"scripts/ComfyUIMini.service"
+[Unit]
+Description=ComfyUI Mini Service
+After=network.target
+
+[Service]
+Type=simple
+User=$USER
+Group=$USER
+WorkingDirectory=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini
+ExecStart=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    sudo cp scripts/ComfyUIMini.service /etc/systemd/system/ComfyUIMini.service
 }
 LINKING_DIRS() {
     if [ ! -d "$BACKUP_DIR" ]; then
@@ -166,46 +197,15 @@ LINKING_DIRS() {
     ln -s "$BACKUP_DIR/input" ComfyUI
     ln -s "$BACKUP_DIR/custom_nodes" ComfyUI
 }
-CREATE_SERVICES() {
-    printf "[*] Creating [\033[0;32mComfyUI.service\033[m] file.\n"
-    cat <<EOF >"scripts/ComfyUI.service"
-[Unit]
-Description=ComfyUI Service
-After=network.target
-
-[Service]
-Restart=on-failure
-RestartSec=5s
-Type=simple
-User=$USER
-Group=$USER
-WorkingDirectory=$COMFYUI_DIR
-ExecStart=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-    printf "[*] Creating [\033[0;32mComfyUIMini.service\033[m] file.\n"
-    cat <<EOF >"scripts/ComfyUIMini.service"
-[Unit]
-Description=ComfyUI Mini Service
-After=network.target
-
-[Service]
-Type=simple
-User=$USER
-Group=$USER
-WorkingDirectory=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini
-ExecStart=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    printf "[*] [\033[0;32mService Files\033[m] created, now adding to systemd.\n"
-    sudo cp scripts/ComfyUI.service /etc/systemd/system/
-    sudo cp scripts/ComfyUIMini.service /etc/systemd/system/
+START_COMFYUI_SERVICE() {
+    printf "\033[32mStarting ComfyUI.service.' \033[0m\n"
     sudo systemctl daemon-reload
+    sudo systemctl start ComfyUI
+}
+START_COMFYUIMINI_SERVICE() {
+    printf "\033[32mStarting ComfyUIMini.service.' \033[0m\n"
+    sudo systemctl daemon-reload
+    sudo systemctl start ComfyUIMini
 }
 
 INST_DEPS
@@ -213,7 +213,8 @@ INSTALL_COMFYUI
 LINKING_DIRS
 INSTALL_COMFYUI_MANAGER
 INSTALL_COMFYUI_MINI
-CREATE_SERVICES
+START_COMFYUI_SERVICE
+START_COMFYUIMINI_SERVICE
 
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
 chmod +x "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/"*.sh
@@ -227,11 +228,6 @@ printf "\033[32mTo start ComfyUIMini as systemd service, run: 'sudo systemctl st
 
 printf "\033[32mTo enable ComfyUI service at boot, run: 'sudo systemctl enable ComfyUI.service' \033[0m\n"
 printf "\033[32mTo enable ComfyUIMini service at boot, run: 'sudo systemctl enable ComfyUIMini.service' \033[0m\n\n"
-
-printf "\033[32mStarting the ComfyUI.service now.' \033[0m\n"
-sudo systemctl start ComfyUI
-printf "\033[32mStarting the ComfyUIMini.service now.' \033[0m\n"
-sudo systemctl start ComfyUIMini
 
 printf "\033[32mTo view the logs of ComfyUI, run: 'multitail -f ComfyUI/user/comfyui.log' \033[0m\n\n"
 printf "\033[32mTo view the logs of ComfyUI, run: 'journalctl -f -u ComfyUI.service' \033[0m\n"
