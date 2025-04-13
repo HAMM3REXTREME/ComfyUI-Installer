@@ -23,8 +23,6 @@ export COMFYUI_INSTALLER_DIR=$PWD
 export BACKUP_DIR=/media/$USER/DATA/ai-stuff
 export COMFYUI_DIR=$PWD/ComfyUI
 export VIRTUAL_ENV=$PWD/ComfyUI/venv
-export COMFYUI_SERVICE=$HOME/.config/systemd/user/ComfyUI.service
-export COMFYUI_MINI_SERVICE=$HOME/.config/systemd/user/ComfyUIMini.service
 EOF
     source .settings
 else
@@ -95,7 +93,7 @@ LINKING_DIRS() {
 }
 CREATE_SERVICES() {
     printf "[*] Creating [\033[0;32mComfyUI.service\033[m] file.\n"
-    cat <<EOF >"$COMFYUI_SERVICE"
+    cat <<EOF >"scripts/ComfyUI.service"
 [Unit]
 Description=ComfyUI Service
 After=network.target
@@ -114,7 +112,7 @@ WantedBy=multi-user.target
 EOF
 
     printf "[*] Creating [\033[0;32mComfyUIMini.service\033[m] file.\n"
-    cat <<EOF >"$COMFYUI_MINI_SERVICE"
+    cat <<EOF >"scripts/ComfyUIMini.service"
 [Unit]
 Description=ComfyUI Mini Service
 After=network.target
@@ -130,12 +128,13 @@ ExecStart=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/start.
 WantedBy=multi-user.target
 EOF
     printf "[*] [\033[0;32mService Files\033[m] created, now adding to systemd.\n"
-    systemctl --user daemon-reload
+    sudo cp scripts/ComfyUI.service /etc/systemd/system/
+    sudo cp scripts/ComfyUIMini.service /etc/systemd/system/
+    sudo systemctl daemon-reload
 }
 
 INSTALL_COMFYUI "$1"
-# LINKING_DIRS
-# INSTALL_REQUIREMENTS
+LINKING_DIRS
 CREATE_SERVICES
 
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
@@ -154,22 +153,12 @@ printf "\033[32mTo view the logs of ComfyUI, run: 'journalctl -f -u ComfyUI.serv
 printf "\033[32mTo view the logs of ComfyUIMini, run: 'journalctl -f -u ComfyUIMini.service' \033[0m\n\n"
 
 printf "\033[32mStarting the ComfyUI.service now.' \033[0m\n"
-systemctl --user start ComfyUI.service
+sudo systemctl start ComfyUI
 printf "\033[32mStarting the ComfyUIMini.service now.' \033[0m\n"
-systemctl --user start ComfyUIMini.service
+sudo systemctl start ComfyUIMini
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:8188' for ComfyUI \033[0m\n"
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:3000' for ComfyUIMini \033[0m\n"
 
 xdg-open http://0.0.0.0:3000
 xdg-open http://0.0.0.0:8188
-xdg-open tail -f "$COMFYUI_INSTALLER_DIR/ComfyUI/user/comfyui.log"
-
-# journalctl -f -u ComfyUI.service
-# if command -v multitail 2>&1 >/dev/null; then
-#     multitail -f "$COMFYUI_INSTALLER_DIR/ComfyUI/user/comfyui.log"
-# elif command -v tail 2>&1 >/dev/null; then
-#     tail -f "$COMFYUI_INSTALLER_DIR/ComfyUI/user/comfyui.log"
-# else
-#     journalctl -f -u ComfyUI.service
-#     journalctl -f -u ComfyUIMini.service
-# fi
+multitail -f "$COMFYUI_INSTALLER_DIR/ComfyUI/user/comfyui.log"
