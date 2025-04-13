@@ -160,8 +160,10 @@ systemctl --user start ComfyUIMini.service
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:8188' for ComfyUI \033[0m\n"
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:3000' for ComfyUIMini \033[0m\n"
 
-# xdg-open http://0.0.0.0:3000
-# xdg-open http://0.0.0.0:8188
+xdg-open http://0.0.0.0:3000
+xdg-open http://0.0.0.0:8188
+xdg-open tail -f "$COMFYUI_INSTALLER_DIR/ComfyUI/user/comfyui.log"
+
 # journalctl -f -u ComfyUI.service
 # if command -v multitail 2>&1 >/dev/null; then
 #     multitail -f "$COMFYUI_INSTALLER_DIR/ComfyUI/user/comfyui.log"
