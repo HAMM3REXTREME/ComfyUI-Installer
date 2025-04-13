@@ -71,6 +71,8 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 python -m pip install -r requirements.txt
 python -m pip install -r custom_nodes/comfyui-manager/requirements.txt
 
+# pip install deepdiff pattern tensorflow xformers
+
 cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
 #!/bin/bash
 cd "$COMFYUI_DIR" || exit 1
