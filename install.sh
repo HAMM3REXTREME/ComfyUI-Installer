@@ -82,20 +82,42 @@ fi
 INSTALL_COMFYUI() {
     if [ -d ComfyUI ]; then
         printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
+        cd ComfyUI || exit 1
         git pull
     else
-        # wget https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh
-        # wget -O - https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh | bash
-        # bash <(curl -Ls https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh)
         chmod +x scripts/*.sh
-        if [ "$GPU" == "NVIDIA" ]; then
-            printf "\n[*] Installing [\033[0;32mComfyUI\033[m], [\033[0;32mComfyUI-Manager\033[m] and [\033[0;32mComfyUIMini\033[m] for [\033[0;32m$GPU\033[m]\n"
-            ./scripts/install-comfyui-nvidia-venv-linux.sh >/dev/null 2>&1
-        fi
-        if [ "$GPU" == "AMD" ]; then
-            printf "\n[*] Installing [\033[0;32mComfyUI\033[m], [\033[0;32mComfyUI-Manager\033[m] and [\033[0;32mComfyUIMini\033[m] for [\033[0;32m$GPU\033[m]\n"
-            ./scripts/install-comfyui-amd-venv-linux.sh >/dev/null 2>&1
-        fi
+        ./scripts/install-comfyui.sh >/dev/null 2>&1
+        printf "[*] [\033[0;32mComfyUI\033[m] installed.\n"
+
+    fi
+}
+
+INSTALL_COMFYUI_MANAGER() {
+    if [ -d ComfyUI/custom_nodes/comfyui-manager ]; then
+        printf "[!] [\033[0;32mComfyUI-Manager\033[m] already exists, updating.\n"
+        cd ComfyUI/custom_nodes/comfyui-manager || exit 1
+        git pull
+    else
+        chmod +x scripts/*.sh
+
+        ./scripts/install-comfyui-manager.sh >/dev/null 2>&1
+        printf "[*] [\033[0;32mComfyUI-Manager\033[m] installed.\n"
+
+        ./scripts/install-comfyui-mini.sh >/dev/null 2>&1
+        printf "[*] [\033[0;32mComfyUIMini\033[m] installed.\n"
+    fi
+}
+INSTALL_COMFYUI_MINI() {
+    if [ -d ComfyUI/custom_nodes/ComfyUIMini ]; then
+        printf "[!] [\033[0;32mComfyUIMini\033[m] already exists, updating.\n"
+        cd ComfyUI/custom_nodes/ComfyUIMini || exit 1
+        git pull
+        chmod +x ./scripts/*.sh
+        ./scripts/update.sh >/dev/null 2>&1
+    else
+        chmod +x scripts/*.sh
+        ./scripts/install-comfyui-mini.sh >/dev/null 2>&1
+        printf "[*] [\033[0;32mComfyUIMini\033[m] installed.\n"
     fi
 }
 LINKING_DIRS() {
@@ -186,6 +208,8 @@ EOF
 INST_DEPS
 INSTALL_COMFYUI
 LINKING_DIRS
+INSTALL_COMFYUI_MANAGER
+INSTALL_COMFYUI_MINI
 CREATE_SERVICES
 
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
