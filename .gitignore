@@ -1,6 +1,6 @@
-/ComfyUI/
-/ComfyUIMini/
-/venv/
+/ComfyUI
+/ComfyUIMini
+/venv
 /scripts/ComfyUI.service
 /scripts/ComfyUIMini.service
 /scripts/run_gpu.sh

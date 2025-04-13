@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
-
+if [ "$1" == "--amd" ]; then
+    printf "[!] [\033[0;32mAMD\033[m].\n"
+    GPU="amd"
+fi
+if [ "$1" == "--nvidia" ]; then
+    printf "[!] [\033[0;32mNvidia\033[m].\n"
+    GPU="nvidia"
+fi
+if [ -z "$1" ]; then
+    printf "[!] Please specify the GPU you want to use. Use --amd or --nvidia.\n"
+    exit 1
+fi
 if [ ! -f .settings ]; then
     cat <<EOF >.settings
 export COMFYUI_INSTALLER_DIR="$PWD"
@@ -32,8 +43,14 @@ INSTALL_COMFYUI() {
         # wget https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh
         # wget -O - https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh | bash
         # bash <(curl -Ls https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh)
-        chmod +x install-comfyui-venv-linux.sh
-        ./install-comfyui-venv-linux.sh >/dev/null 2>&1
+        chmod +x scripts/*.sh
+        if [ "$GPU" == "nvidia" ]; then
+            printf "[*] Installing [\033[0;32mComfyUI\033[m] for [\033[0;32mNvidia\033[m]\n"
+            ./install-comfyui-nvidia-venv-linux.sh >/dev/null 2>&1
+        elif [ "$GPU" == "amd" ]; then
+            printf "[*] Installing [\033[0;32mComfyUI\033[m] for [\033[0;32mAMD\033[m]\n"
+            ./install-comfyui-amd-venv-linux.sh >/dev/null 2>&1
+        fi
     fi
 }
 LINKING_DIRS() {

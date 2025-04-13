@@ -1,7 +1,8 @@
 # ComfyUI Installer
 
-Easily install ComfyUI (in a python venv) on Linux.
+Easily install ComfyUI + ComfyUI-Manager + ComfyUIMini (in a python venv) on Linux.
 Tested on Arch + AMD GPU.
+Tested on Ubuntu + Nvidia GPU.
 
 ![ComfyUI Screenshot](graphics/comfyui_screenshot.png)
 _Note:_ This is not the official ComfyUI icon.  
@@ -12,28 +13,32 @@ You will need to have `python`, `pyenv` and `pip` on your system.
 Make sure to install for your GPU Vendor (AMD/Nvidia):
 
 ```sh
-git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer
+git clone https://github.com/itsdarklikehell/ComfyUI-Installer
 cd ComfyUI-Installer
 ./install-amd.sh or ./install-nvidia.sh
-./menu-entry.sh # Optionally add menu entry
-./launch.sh
+./scripts/menu-entry.sh # Optionally add menu entry
+./scripts/run_gpu.sh or ./scripts/run_cpu.sh # Run ComfyUI
+./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh # Run ComfyUIMini
 ```
 
 ## Installation
 
 1. To install ComfyUI using this script, **clone this repo and cd into it**:  
-   `git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer && cd ComfyUI-Installer`
+   `git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer`
 
 2. After that's done, run the install script for your GPU vendor (AMD or Nvidia). This might take a while.  
    **To install for AMD:** `./install-amd.sh`  
    **To install for Nvidia:** `./install-nvidia.sh`  
-   _Tip:_ You can optionally run `./menu-entry.sh` in order to make a desktop menu entry.
+   _Tip:_ You can optionally run `./scripts/menu-entry.sh` in order to make a desktop menu entry.
 
 3. When the install script has finished, you just need to copy/paste your models into their proper directories:  
    Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`  
    Put your VAE in: `ComfyUI/models/vae`
 
-Once you've done that, **launch ComfyUI using**: `./launch.sh`
+Once you've done that, ComfyUI should be running on your system.
+
+**launch ComfyUI using**: `./scripts/run_gpu.sh` or `./scripts/run_cpu.sh` (depending on which GPU you installed for).   
+To launch ComfyUIMini, run: `./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh`.
 
 ## Updating
 

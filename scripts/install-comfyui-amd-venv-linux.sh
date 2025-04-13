@@ -70,8 +70,9 @@ cd "$COMFYUI_INSTALLER_DIR"/ComfyUI || exit 1
 python -m venv venv
 source venv/bin/activate
 
-python -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128
-python -m pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128
+# You might want to try using a newer or nightly version here if ComfyUI is not working for you.
+# pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm6.2.4
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2
 python -m pip install -r requirements.txt
 python -m pip install -r custom_nodes/comfyui-manager/requirements.txt
 
