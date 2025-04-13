@@ -71,7 +71,7 @@ python -m pip install --pre torch torchvision torchaudio --index-url https://dow
 python -m pip install -r requirements.txt
 python -m pip install -r custom_nodes/comfyui-manager/requirements.txt
 
-find custom_nodes/ -type f -name 'requirements.txt' -exec pip install -r {} \;
+# find custom_nodes/ -type f -name 'requirements.txt' -exec pip install -r {} \;
 
 pip install deepdiff pattern tensorflow xformers PyOpenGL-accelerate
 
