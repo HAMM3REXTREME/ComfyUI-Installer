@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 set -e
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root"
+    exit 1
+fi
 if [ "$1" == "--help" ]; then
     printf "[*] Usage: install.sh --amd or install.sh --nvidia\n"
     printf "[*] Example: install.sh --nvidia\n"
