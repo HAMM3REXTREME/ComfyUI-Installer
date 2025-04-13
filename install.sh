@@ -210,6 +210,6 @@ sudo systemctl start ComfyUIMini
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:8188' for ComfyUI \033[0m\n"
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:3000' for ComfyUIMini \033[0m\n"
 
-xdg-open http://0.0.0.0:3000
-xdg-open http://0.0.0.0:8188
+# xdg-open http://0.0.0.0:3000
+# xdg-open http://0.0.0.0:8188
 multitail -f "$COMFYUI_INSTALLER_DIR/ComfyUI/user/comfyui.log"
