@@ -1,14 +1,18 @@
-# ComfyUI Installer
+# ComfyUI Installer - Simple Install Version
+
+**This version of the installer script doesn't have the fancy features found in the main branch, but if you just want to install ComfyUI without any of the extra features, this should work.**
+
+**Also check out `comfy-cli`, which is a command line tool that makes it easier to install and manage ComfyUI.**
 
 Easily install ComfyUI (in a python venv) on Linux.
 Tested on Arch + AMD GPU.
 
 ![ComfyUI Screenshot](graphics/comfyui_screenshot.png)
-_Note:_ This is not the official ComfyUI icon.  
+_Note:_ This is not the official ComfyUI icon.
 
 ## Quick Start
 
-You will need to have `python`, `pyenv` and `pip` on your system.
+You will need to have `python`, `pyenv` and `pip` on your system. Use your package manager to install them, as this script won't do that for you.  
 Make sure to install for your GPU Vendor (AMD/Nvidia):
 
 ```sh
@@ -50,8 +54,8 @@ Simply cd into the ComfyUI folder and run git pull:
    (The installer creates a python venv named 'venv' in the base folder by default)
 
 2. Upgrade torch, use the command for your GPU vendor (similar to the install script):  
-   **For AMD:** `pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2`  
-   **For Nvidia:** `pip install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu124`  
+   **For AMD:** `pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2.4`  
+   **For Nvidia:** `pip install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu126`  
    _Some version numbers might be out of date here._
 
 3. Upgrade ComfyUI dependencies by running this command:  
