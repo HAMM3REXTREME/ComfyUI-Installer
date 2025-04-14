@@ -15,7 +15,7 @@ Make sure to install for your GPU Vendor (AMD/Nvidia):
 ```sh
 git clone https://github.com/itsdarklikehell/ComfyUI-Installer
 cd ComfyUI-Installer
-# edit .settings to your liking.
+# edit .settings to your liking (make sure to set the correct GPU variable i.e. 'NVIDIA' or 'AMD').
 nano .settings
 ./install.sh # Installs ComfyUI, ComfyUI Manager and ComfyUIMini in a python venv
 ```
@@ -24,7 +24,7 @@ nano .settings
 1. To install ComfyUI using this script, **clone this repo and cd into it**:
    `git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer`
 
-2. After that's done, edit the `.settings` file to set the GPU ie 'NVIDIA' or 'AMD' and the folder paths to your liking:
+2. After that's done, edit the `.settings` file. (make sure to set the correct GPU variable i.e. 'NVIDIA' or 'AMD') and edit the folder paths to your liking:
    `nano .settings`
 
 3. Then run the install script:
