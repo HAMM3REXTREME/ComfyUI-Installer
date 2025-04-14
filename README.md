@@ -15,8 +15,7 @@ Make sure to install for your GPU Vendor (AMD/Nvidia):
 ```sh
 git clone https://github.com/itsdarklikehell/ComfyUI-Installer
 cd ComfyUI-Installer
-./install.sh --amd for AMD
-./install.sh --nvidia for Nvidia
+./install.sh # Installs ComfyUI, ComfyUI Manager and ComfyUIMini all in one python venv.
 ./scripts/menu-entry.sh # Optionally add menu entry.
 bash ./scripts/run_gpu.sh # To manually run ComfyUI on GPU. (install.sh creates these .sh files during the installation process.)
 bash ./scripts/run_cpu.sh # To manually run ComfyUI on CPU. (install.sh creates these .sh files during the installation process.)
