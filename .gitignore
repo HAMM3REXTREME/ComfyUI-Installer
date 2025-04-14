@@ -5,5 +5,4 @@
 /scripts/ComfyUIMini.service
 /scripts/run_gpu.sh
 /scripts/run_cpu.sh
-.settings
 ComfyUI-Installer.code-workspace

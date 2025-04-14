@@ -74,7 +74,7 @@ EOF
 if [ ! -f .settings ]; then
     printf "[*] [\033[0;32m.settings\033[m] file not found, creating.\n"
     CREATE_SETTINGS_FILE
-    source .settings
+    EXIT
 else
     printf "[*] [\033[0;32m.settings\033[m] file found, loading.\n"
     source .settings
@@ -82,21 +82,77 @@ fi
 INSTALL_COMFYUI() {
     if [ -d ComfyUI ]; then
         printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
+        cd ComfyUI || exit 1
         git pull
     else
-        # wget https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh
-        # wget -O - https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh | bash
-        # bash <(curl -Ls https://github.com/ltdrdata/ComfyUI-Manager/raw/main/scripts/install-comfyui-venv-linux.sh)
+        printf "[*] Installing [\033[0;32mComfyUI\033[m].\n"
         chmod +x scripts/*.sh
-        if [ "$GPU" == "NVIDIA" ]; then
-            printf "\n[*] Installing [\033[0;32mComfyUI\033[m], [\033[0;32mComfyUI-Manager\033[m] and [\033[0;32mComfyUIMini\033[m] for [\033[0;32m$GPU\033[m]\n"
-            ./scripts/install-comfyui-nvidia-venv-linux.sh >/dev/null 2>&1
-        fi
-        if [ "$GPU" == "AMD" ]; then
-            printf "\n[*] Installing [\033[0;32mComfyUI\033[m], [\033[0;32mComfyUI-Manager\033[m] and [\033[0;32mComfyUIMini\033[m] for [\033[0;32m$GPU\033[m]\n"
-            ./scripts/install-comfyui-amd-venv-linux.sh >/dev/null 2>&1
-        fi
+        ./scripts/install-comfyui.sh >/dev/null 2>&1
+        printf "[*] [\033[0;32mComfyUI\033[m] installed.\n"
     fi
+    printf "[*] Creating [\033[0;32mComfyUI.service\033[m] file.\n"
+    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.service"
+[Unit]
+Description=ComfyUI Service
+After=network.target
+
+[Service]
+Restart=on-failure
+RestartSec=5s
+Type=simple
+User=$USER
+Group=$USER
+WorkingDirectory=$COMFYUI_DIR
+ExecStart=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    sudo cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.service" /etc/systemd/system/ComfyUI.service
+}
+
+INSTALL_COMFYUI_MANAGER() {
+    if [ -d ComfyUI/custom_nodes/comfyui-manager ]; then
+        printf "[!] [\033[0;32mComfyUI-Manager\033[m] already exists, updating.\n"
+        cd ComfyUI/custom_nodes/comfyui-manager || exit 1
+        git pull
+    else
+        printf "[*] Installing [\033[0;32mComfyUI-Manager\033[m].\n"
+        chmod +x scripts/*.sh
+        ./scripts/install-comfyui-manager.sh >/dev/null 2>&1
+        printf "[*] [\033[0;32mComfyUI-Manager\033[m] installed.\n"
+    fi
+}
+INSTALL_COMFYUI_MINI() {
+    if [ -d ComfyUI/custom_nodes/ComfyUIMini ]; then
+        printf "[!] [\033[0;32mComfyUIMini\033[m] already exists, updating.\n"
+        cd ComfyUI/custom_nodes/ComfyUIMini || exit 1
+        git pull
+        chmod +x ./scripts/*.sh
+        ./scripts/update.sh >/dev/null 2>&1
+    else
+        printf "[*] Installing [\033[0;32mComfyUIMini\033[m].\n"
+        chmod +x scripts/*.sh
+        ./scripts/install-comfyui-mini.sh >/dev/null 2>&1
+        printf "[*] [\033[0;32mComfyUIMini\033[m] installed.\n"
+    fi
+    printf "[*] Creating [\033[0;32mComfyUIMini.service\033[m] file.\n"
+    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.service"
+[Unit]
+Description=ComfyUI Mini Service
+After=network.target
+
+[Service]
+Type=simple
+User=$USER
+Group=$USER
+WorkingDirectory=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini
+ExecStart=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    sudo cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.service" /etc/systemd/system/ComfyUIMini.service
 }
 LINKING_DIRS() {
     if [ ! -d "$BACKUP_DIR" ]; then
@@ -141,52 +197,24 @@ LINKING_DIRS() {
     ln -s "$BACKUP_DIR/input" ComfyUI
     ln -s "$BACKUP_DIR/custom_nodes" ComfyUI
 }
-CREATE_SERVICES() {
-    printf "[*] Creating [\033[0;32mComfyUI.service\033[m] file.\n"
-    cat <<EOF >"scripts/ComfyUI.service"
-[Unit]
-Description=ComfyUI Service
-After=network.target
-
-[Service]
-Restart=on-failure
-RestartSec=5s
-Type=simple
-User=$USER
-Group=$USER
-WorkingDirectory=$COMFYUI_DIR
-ExecStart=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-    printf "[*] Creating [\033[0;32mComfyUIMini.service\033[m] file.\n"
-    cat <<EOF >"scripts/ComfyUIMini.service"
-[Unit]
-Description=ComfyUI Mini Service
-After=network.target
-
-[Service]
-Type=simple
-User=$USER
-Group=$USER
-WorkingDirectory=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini
-ExecStart=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    printf "[*] [\033[0;32mService Files\033[m] created, now adding to systemd.\n"
-    sudo cp scripts/ComfyUI.service /etc/systemd/system/
-    sudo cp scripts/ComfyUIMini.service /etc/systemd/system/
+START_COMFYUI_SERVICE() {
+    printf "\033[32mStarting ComfyUI.service.' \033[0m\n"
     sudo systemctl daemon-reload
+    sudo systemctl start ComfyUI
+}
+START_COMFYUIMINI_SERVICE() {
+    printf "\033[32mStarting ComfyUIMini.service.' \033[0m\n"
+    sudo systemctl daemon-reload
+    sudo systemctl start ComfyUIMini
 }
 
 INST_DEPS
 INSTALL_COMFYUI
 LINKING_DIRS
-CREATE_SERVICES
+INSTALL_COMFYUI_MANAGER
+INSTALL_COMFYUI_MINI
+START_COMFYUI_SERVICE
+START_COMFYUIMINI_SERVICE
 
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
 chmod +x "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/"*.sh
@@ -200,11 +228,6 @@ printf "\033[32mTo start ComfyUIMini as systemd service, run: 'sudo systemctl st
 
 printf "\033[32mTo enable ComfyUI service at boot, run: 'sudo systemctl enable ComfyUI.service' \033[0m\n"
 printf "\033[32mTo enable ComfyUIMini service at boot, run: 'sudo systemctl enable ComfyUIMini.service' \033[0m\n\n"
-
-printf "\033[32mStarting the ComfyUI.service now.' \033[0m\n"
-sudo systemctl start ComfyUI
-printf "\033[32mStarting the ComfyUIMini.service now.' \033[0m\n"
-sudo systemctl start ComfyUIMini
 
 printf "\033[32mTo view the logs of ComfyUI, run: 'multitail -f ComfyUI/user/comfyui.log' \033[0m\n\n"
 printf "\033[32mTo view the logs of ComfyUI, run: 'journalctl -f -u ComfyUI.service' \033[0m\n"
