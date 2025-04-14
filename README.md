@@ -16,7 +16,7 @@ You will need to have `python`, `pyenv` and `pip` on your system. Use your packa
 Make sure to install for your GPU Vendor (AMD/Nvidia):
 
 ```sh
-git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer
+git clone -b simple https://github.com/HAMM3REXTREME/ComfyUI-Installer
 cd ComfyUI-Installer
 ./install-amd.sh or ./install-nvidia.sh
 ./menu-entry.sh # Optionally add menu entry
