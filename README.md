@@ -52,7 +52,9 @@ To check ComfyUIMini's status, run: `tail -f ComfyUI/custom_nodes/ComfyUIMini/lo
 
 **To Manually launch ComfyUI use**:
 
-`bash ./scripts/run_gpu.sh` or `./scripts/run_cpu.sh`.
+`bash ./scripts/run_gpu.sh`
+or
+`./scripts/run_cpu.sh`.
 
 
 **To Manually launch ComfyUIMini use**:
