@@ -25,8 +25,8 @@ cd ComfyUI-Installer
 
 ## Installation
 
-1. To install ComfyUI using this script, **clone this repo and cd into it**:  
-   `git clone https://github.com/HAMM3REXTREME/ComfyUI-Installer && cd ComfyUI-Installer`
+1. To install ComfyUI using this script, **clone this repo (`simple` branch) and cd into it**:  
+   `git clone -b simple https://github.com/HAMM3REXTREME/ComfyUI-Installer && cd ComfyUI-Installer`
 
 2. After that's done, run the install script for your GPU vendor (AMD or Nvidia). This might take a while.  
    **To install for AMD:** `./install-amd.sh`  
