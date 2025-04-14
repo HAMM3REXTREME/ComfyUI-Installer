@@ -1,6 +1,9 @@
-/ComfyUI
-/ComfyUIMini
-/venv
-/scripts/ComfyUI.service
-/scripts/ComfyUIMini.service
+ComfyUI
+venv
 ComfyUI-Installer.code-workspace
+scripts/ComfyUI.service
+scripts/ComfyUIMini.service
+scripts/ComfyUI.desktop
+scripts/ComfyUIMini.desktop
+scripts/run_cpu.sh
+scripts/run_gpu.sh
