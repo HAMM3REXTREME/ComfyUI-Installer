@@ -15,31 +15,28 @@ Make sure to install for your GPU Vendor (AMD/Nvidia):
 ```sh
 git clone https://github.com/itsdarklikehell/ComfyUI-Installer
 cd ComfyUI-Installer
-./install.sh # Installs ComfyUI, ComfyUI Manager and ComfyUIMini all in one python venv.
-./scripts/menu-entry.sh # Optionally add menu entry.
-bash ./scripts/run_gpu.sh # To manually run ComfyUI on GPU. (install.sh creates these .sh files during the installation process.)
-bash ./scripts/run_cpu.sh # To manually run ComfyUI on CPU. (install.sh creates these .sh files during the installation process.)
-bash ./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh # To manually run ComfyUIMini.
-
-sudo systemctl start ComfyUI # To start ComfyUI Service. (install.sh creates these service files during the installation process.)
-sudo systemctl start ComfyUIMini # To start ComfyUIMini Service. (install.sh creates these service files during the installation process.)
-sudo systemctl enable ComfyUI # To enable ComfyUI Service. (install.sh creates these files service during the installation process.)
-sudo systemctl enable ComfyUIMini # To enable ComfyUIMini Service. (install.sh creates these service files during the installation process.)
+# edit .settings to your liking.
+nano .settings
+./install.sh # Installs ComfyUI, ComfyUI Manager and ComfyUIMini in a python venv
 ```
-
 ## Installation
 
 1. To install ComfyUI using this script, **clone this repo and cd into it**:
    `git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer`
 
-2. After that's done, run the install script for your GPU vendor (AMD or Nvidia). This might take a while.
-   **To install for AMD:** `./install.sh --amd`
-   **To install for Nvidia:** `./install.sh --nvidia`
-   _Tip:_ Afterwards you can optionally run `./scripts/menu-entry.sh` in order to make a desktop menu entry.
+2. After that's done, edit the `.settings` file to your liking:
+   `nano .settings`
 
-3. When the install script has finished, you just need to copy/paste your models into their proper directories:
+3. When the install script has finished, ComfyUI systemd service should now be running, you can check the status of the service with:
+   `sudo systemctl status ComfyUI.service`
+   If it's not running, you can start it with:
+   `sudo systemctl start ComfyUI.service`
+   If you want to enable it to start on boot, you can do so with:
+   `sudo systemctl enable ComfyUI.service`
+
+5. Now you can download custom_nodes and models with the ComfyUI-Manager or copy/paste/clone custom_nodes and models into their proper directories:
    Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`
-   Put your VAE in: `ComfyUI/models/vae`
+   Put your VAE in: `ComfyUI/models/vae` etc.
 
 Once you've done that, ComfyUI and ComfyUIMini should be running on your system (give it a few seconds to start up).
 Then open your browser and go to:
@@ -63,43 +60,43 @@ or
 
 **To start ComfyUI systemd service use**:
 
-`sudo systemctl start ComfyUI.service`.
+`sudo systemctl start ComfyUI.service`
 
 **To start ComfyUIMini systemd service use**:
 
-`sudo systemctl start ComfyUIMini.service`.
+`sudo systemctl start ComfyUIMini.service`
 
 **To enable ComfyUI systemd service use**:
 
- `sudo systemctl enable ComfyUI.service`.
+ `sudo systemctl enable ComfyUI.service`
 
 **To enable ComfyUIMini systemd service use**:
 
- `sudo systemctl enable ComfyUIMini.service`.
+ `sudo systemctl enable ComfyUIMini.service`
 
 **To stop ComfyUI systemd service use**:
 
-`sudo systemctl stop ComfyUI.service`.
+`sudo systemctl stop ComfyUI.service`
 
 **To stop ComfyUIMini systemd service use**:
 
- `sudo ystemctl stop ComfyUIMini.service`.
+ `sudo ystemctl stop ComfyUIMini.service`
 
 **To restart ComfyUI systemd service use**:
 
- `sudo systemctl restart ComfyUI.service`.
+ `sudo systemctl restart ComfyUI.service`
 
 **To restart ComfyUIMini systemd service use**:
 
- `sudo systemctl restart ComfyUIMini.service`.
+ `sudo systemctl restart ComfyUIMini.service`
 
 **To check ComfyUI systemd service status use**:
 
-`sudo systemctl status ComfyUI.service`.
+`sudo systemctl status ComfyUI.service`
 
 **To check ComfyUIMini systemd service status use**:
 
-`sudo systemctl status ComfyUIMini.service`.
+`sudo systemctl status ComfyUIMini.service`
 
 ## Updating
 

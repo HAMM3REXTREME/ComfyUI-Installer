@@ -74,7 +74,7 @@ EOF
 if [ ! -f .settings ]; then
     printf "[*] [\033[0;32m.settings\033[m] file not found, creating.\n"
     CREATE_SETTINGS_FILE
-    source .settings
+    EXIT
 else
     printf "[*] [\033[0;32m.settings\033[m] file found, loading.\n"
     source .settings
