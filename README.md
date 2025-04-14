@@ -51,21 +51,28 @@ To check ComfyUIMini's status, run: `tail -f ComfyUI/custom_nodes/ComfyUIMini/lo
 ## Usage
 
 **To Manually launch ComfyUI use**: `bash ./scripts/run_gpu.sh` or `./scripts/run_cpu.sh`.
+
+
 **To Manually launch ComfyUIMini use**: `bash ./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh`.
 
 **To start ComfyUI systemd service use**: `sudo systemctl start ComfyUI.service`.
+
 **To start ComfyUIMini systemd service use**: `sudo systemctl start ComfyUIMini.service`.
 
 **To enable ComfyUI systemd service use**: `sudo systemctl enable ComfyUI.service`.
+
 **To enable ComfyUIMini systemd service use**: `sudo systemctl enable ComfyUIMini.service`.
 
 **To stop ComfyUI systemd service use**: `sudo systemctl stop ComfyUI.service`.
+
 **To stop ComfyUIMini systemd service use**: `sudo ystemctl stop ComfyUIMini.service`.
 
 **To restart ComfyUI systemd service use**: `sudo systemctl restart ComfyUI.service`.
+
 **To restart ComfyUIMini systemd service use**: `sudo systemctl restart ComfyUIMini.service`.
 
 **To check ComfyUI systemd service status use**: `sudo systemctl status ComfyUI.service`.
+
 **To check ComfyUIMini systemd service status use**: `sudo systemctl status ComfyUIMini.service`.
 
 ## Updating
