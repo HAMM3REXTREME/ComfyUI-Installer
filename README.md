@@ -24,10 +24,13 @@ nano .settings
 1. To install ComfyUI using this script, **clone this repo and cd into it**:
    `git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer`
 
-2. After that's done, edit the `.settings` file to your liking:
+2. After that's done, edit the `.settings` file to set the GPU ie 'NVIDIA' or 'AMD' and the folder paths to your liking:
    `nano .settings`
 
-3. When the install script has finished, ComfyUI systemd service should now be running, you can check the status of the service with:
+3. Then run the install script:
+   `./install.sh`
+
+4. When the install script has finished, ComfyUI systemd service should now be running, you can check the status of the service with:
    `sudo systemctl status ComfyUI.service`
    If it's not running, you can start it with:
    `sudo systemctl start ComfyUI.service`
