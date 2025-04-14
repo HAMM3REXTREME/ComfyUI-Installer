@@ -207,17 +207,76 @@ START_COMFYUIMINI_SERVICE() {
     sudo systemctl daemon-reload
     sudo systemctl start ComfyUIMini
 }
-
+ADD_TO_DESKTOP(){
+    printf "[*] Adding ComfyUI to desktop.\n"
+    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
+[Desktop Entry]
+Name=ComfyUI
+Path=$COMFYUI_INSTALLER_DIR/ComfyUI/
+Exec=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
+Comment=A powerful and modular stable diffusion GUI with a graph/nodes interface.
+Terminal=true
+Icon=$COMFYUI_INSTALLER_DIR/graphics/comfyui.svg
+Type=Application
+NoDisplay=false
+EOF
+cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop" ~/.local/share/applications/ComfyUI.desktop
+    chmod +x ~/.local/share/applications/ComfyUI.desktop
+    printf "[*] Adding ComfyUIMini to desktop.\n"
+    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop"
+[Desktop Entry]
+Name=ComfyUIMini
+Path=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/
+Exec=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh
+Comment=A powerful and modular stable diffusion GUI with a graph/nodes interface.
+Terminal=true
+Icon=$COMFYUI_INSTALLER_DIR/graphics/comfyui.svg
+Type=Application
+NoDisplay=false
+EOF
+    cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop" ~/.local/share/applications/ComfyUIMini.desktop
+    chmod +x ~/.local/share/applications/ComfyUIMini.desktop
+    exec_path="$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"   # Launch script
+    icon_path="$COMFYUI_INSTALLER_DIR/graphics/comfyui.svg" # ComfyUI Icon
+    desktop-file-install \
+    --dir="$HOME/.local/share/applications/" \
+    --set-key=Path \
+    --set-value="$PWD" \
+    --set-key=Exec \
+    --set-value="$exec_path" \
+    --set-icon="$icon_path" \
+    "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
+}
+CREATE_RUNFILES(){
+    printf "[*] Adding runfile to scripts.\n"
+    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
+#!/bin/bash
+cd "$COMFYUI_INSTALLER_DIR/ComfyUI" || exit 1
+source venv/bin/activate
+python main.py --listen 0.0.0.0 --preview-method auto
+EOF
+    chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
+    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
+#!/bin/bash
+cd "$COMFYUI_INSTALLER_DIR/ComfyUI"
+source venv/bin/activate
+python main.py --listen 0.0.0.0 --preview-method auto --cpu
+EOF
+    chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh" 
+}
 INST_DEPS
 INSTALL_COMFYUI
 LINKING_DIRS
 INSTALL_COMFYUI_MANAGER
 INSTALL_COMFYUI_MINI
-START_COMFYUI_SERVICE
-START_COMFYUIMINI_SERVICE
+ADD_TO_DESKTOP
+CREATE_RUNFILES
 
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
 chmod +x "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/"*.sh
+
+START_COMFYUI_SERVICE
+START_COMFYUIMINI_SERVICE
 
 printf "\033[32mFinished!\033[0m\n\n"
 printf "\033[32mTo Launch ComfyUI manually, use: 'scripts/run_gpu.sh' or 'scripts/run_cpu.sh' \033[0m\n"
