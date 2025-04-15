@@ -15,8 +15,6 @@ Make sure to install for your GPU Vendor (AMD/Nvidia):
 ```sh
 git clone https://github.com/itsdarklikehell/ComfyUI-Installer
 cd ComfyUI-Installer
-# edit .settings to your liking (make sure to set the correct GPU variable i.e. 'NVIDIA' or 'AMD').
-nano .settings
 ./install.sh # Installs ComfyUI, ComfyUI Manager and ComfyUIMini in a python venv
 ```
 ## Installation
@@ -24,20 +22,17 @@ nano .settings
 1. To install ComfyUI using this script, **clone this repo and cd into it**:
    `git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer`
 
-2. After that's done, edit the `.settings` file. (make sure to set the correct GPU variable i.e. 'NVIDIA' or 'AMD') and edit the folder paths to your liking:
-   `nano .settings`
-
-3. Then run the install script:
+2. Then run the install script:
    `./install.sh`
 
-4. When the install script has finished, ComfyUI systemd service should now be running, you can check the status of the service with:
+3. When the install script has finished, ComfyUI systemd service should now be running, you can check the status of the service with:
    `sudo systemctl status ComfyUI.service`
    If it's not running, you can start it with:
    `sudo systemctl start ComfyUI.service`
    If you want to enable it to start on boot, you can do so with:
    `sudo systemctl enable ComfyUI.service`
 
-5. Now you can download custom_nodes and models with the ComfyUI-Manager or copy/paste/clone custom_nodes and models into their proper directories:
+4. Now you can download custom_nodes and models with the ComfyUI-Manager or copy/paste/clone custom_nodes and models into their proper directories:
    Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`
    Put your VAE in: `ComfyUI/models/vae` etc.
 
@@ -52,22 +47,22 @@ To check ComfyUIMini's status, run: `tail -f ComfyUI/custom_nodes/ComfyUIMini/lo
 
 **To Manually launch ComfyUI use**:
 
-`bash ./scripts/run_gpu.sh`
+ `bash ./scripts/run_gpu.sh`
 or
-`./scripts/run_cpu.sh`.
+ `bash ./scripts/run_cpu.sh`.
 
 
 **To Manually launch ComfyUIMini use**:
 
-`bash ./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh`.
+ `bash ./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh`.
 
 **To start ComfyUI systemd service use**:
 
-`sudo systemctl start ComfyUI.service`
+ `sudo systemctl start ComfyUI.service`
 
 **To start ComfyUIMini systemd service use**:
 
-`sudo systemctl start ComfyUIMini.service`
+ `sudo systemctl start ComfyUIMini.service`
 
 **To enable ComfyUI systemd service use**:
 
@@ -79,7 +74,7 @@ or
 
 **To stop ComfyUI systemd service use**:
 
-`sudo systemctl stop ComfyUI.service`
+ `sudo systemctl stop ComfyUI.service`
 
 **To stop ComfyUIMini systemd service use**:
 
@@ -95,11 +90,11 @@ or
 
 **To check ComfyUI systemd service status use**:
 
-`sudo systemctl status ComfyUI.service`
+ `sudo systemctl status ComfyUI.service`
 
 **To check ComfyUIMini systemd service status use**:
 
-`sudo systemctl status ComfyUIMini.service`
+ `sudo systemctl status ComfyUIMini.service`
 
 ## Updating
 
