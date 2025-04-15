@@ -46,7 +46,16 @@ ASK_USER_INPUT() {
     COMFYUI_DIR=$(whiptail --title "Gpu Selection." --inputbox "Where should ComfyUI be installed? (Default: $PWD/ComfyUI)" $LINES $COLUMNS "$PWD/ComfyUI" 3>&1 1>&2 2>&3)
     exitstatus=$?
     if [ $exitstatus == 0 ]; then
-        printf "[*] [\033[0;32mInstaller\033[m] directory: [\033[0;32m%s\033[m]\n" "$COMFYUI_DIR"
+        printf "[*] [\033[0;32mComfyUI\033[m] directory: [\033[0;32m%s\033[m]\n" "$COMFYUI_DIR"
+    else
+        printf "[!] User selected Cancel."
+        exit 1
+    fi
+
+    VIRTUAL_ENV=$(whiptail --inputbox "Where should the virtual environment directory be created? (Default: $PWD/ComfyUI/venv)" $LINES $COLUMNS "$PWD/ComfyUI/venv" 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus == 0 ]; then
+        printf "[*] [\033[0;32mVirtual Environment\033[m] directory: [\033[0;32m%s\033[m]\n" "$VIRTUAL_ENV"
     else
         printf "[!] User selected Cancel."
         exit 1
@@ -64,10 +73,9 @@ ASK_USER_INPUT() {
     GPU=$(whiptail --menu "Select the GPU type." $LINES $COLUMNS $((LINES - 8)) \
         "NVIDIA" "For Nvidia Gpu's." \
         "AMD" "For AMD Gpu's." 3>&1 1>&2 2>&3)
-    VIRTUAL_ENV=$(whiptail --inputbox "Where should the virtual environment directory be created? (Default: $PWD/ComfyUI/venv)" $LINES $COLUMNS "$PWD/ComfyUI/venv" 3>&1 1>&2 2>&3)
     exitstatus=$?
     if [ $exitstatus == 0 ]; then
-        printf "[*] [\033[0;32mVirtual Environment\033[m] directory: [\033[0;32m%s\033[m]\n" "$VIRTUAL_ENV"
+        printf "[*] [\033[0;32mGPU\033[m] type: [\033[0;32m%s\033[m]\n" "$GPU"
     else
         printf "[!] User selected Cancel."
         exit 1
