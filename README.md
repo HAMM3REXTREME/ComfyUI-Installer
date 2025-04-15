@@ -36,6 +36,10 @@ export VIRTUAL_ENV=~/ComfyUI-Installer/ComfyUI/venv
 # Use systemd:
 export USE_SYSTEMD=true
 ```
+Then run the install script:
+```sh
+./install.sh
+```
 ## Guided install (SHOULD ALSO WORK ON ALL DISTROS)
 
 You will need to have `python`, `python-venv` and `pip` on your system.
