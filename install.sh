@@ -32,180 +32,178 @@ INST_DEPS() {
         sudo apt install multitail -y
     fi
 }
-
-CREATE_SETTINGS_FILE() {
-    DEF_COMFYUI_INSTALLER_DIR="$PWD"
-    DEF_COMFYUI_DIR="$PWD/ComfyUI"
-    DEF_GPU="NVIDIA"
-    DEF_VIRTUAL_ENV="$PWD/ComfyUI/venv"
-
-    if [ -z "$COMFYUI_INSTALLER_DIR" ]; then
-        COMFYUI_INSTALLER_DIR=$DEF_COMFYUI_INSTALLER_DIR
-    fi
-    if [ -z "$COMFYUI_DIR" ]; then
-        COMFYUI_DIR=$DEF_COMFYUI_DIR
-    fi
-    if [ -z "$GPU" ]; then
-        GPU=$DEF_GPU
-    fi
-    if [ -z "$VIRTUAL_ENV" ]; then
-        VIRTUAL_ENV=$DEF_VIRTUAL_ENV
+ASK_USER_INPUT() {
+    eval "$(resize)"
+    COMFYUI_INSTALLER_DIR=$(whiptail --title "Installer directory." --inputbox "Enter the directory where the installer currently is located. (Default: $PWD)" $LINES $COLUMNS "$PWD" 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus == 0 ]; then
+        printf "[*] [\033[0;32mInstaller\033[m] directory: [\033[0;32m%s\033[m]\n" "$COMFYUI_INSTALLER_DIR"
+    else
+        printf "[!] User selected Cancel."
+        exit 1
     fi
 
+    COMFYUI_DIR=$(whiptail --title "Gpu Selection." --inputbox "Where should ComfyUI be installed? (Default: $PWD/ComfyUI)" $LINES $COLUMNS "$PWD/ComfyUI" 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus == 0 ]; then
+        printf "[*] [\033[0;32mComfyUI\033[m] directory: [\033[0;32m%s\033[m]\n" "$COMFYUI_DIR"
+    else
+        printf "[!] User selected Cancel."
+        exit 1
+    fi
+
+    VIRTUAL_ENV=$(whiptail --inputbox "Where should the virtual environment directory be created? (Default: $PWD/ComfyUI/venv)" $LINES $COLUMNS "$PWD/ComfyUI/venv" 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus == 0 ]; then
+        printf "[*] [\033[0;32mVirtual Environment\033[m] directory: [\033[0;32m%s\033[m]\n" "$VIRTUAL_ENV"
+    else
+        printf "[!] User selected Cancel."
+        exit 1
+    fi
+
+    BACKUP_DIR=$(whiptail --title "Backup directory." --inputbox "Where should the backup directory be created? (Default: $PWD/backup)" $LINES $COLUMNS "$PWD/backup" 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus == 0 ]; then
+        printf "[*] [\033[0;32mBackup\033[m] directory: [\033[0;32m%s\033[m]\n" "$BACKUP_DIR"
+    else
+        printf "[!] User selected Cancel."
+        exit 1
+    fi
+
+    GPU=$(whiptail --menu "Select the GPU type." $LINES $COLUMNS $((LINES - 8)) \
+        "NVIDIA" "For Nvidia Gpu's." \
+        "AMD" "For AMD Gpu's." 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus == 0 ]; then
+        printf "[*] [\033[0;32mGPU\033[m] type: [\033[0;32m%s\033[m]\n" "$GPU"
+    else
+        printf "[!] User selected Cancel."
+        exit 1
+    fi
+
+    USE_SYSTEMD=$(whiptail --title "Use Systemd?" --inputbox "Should a systemd service be created? (Default: true)" $LINES $COLUMNS "true" 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus == 0 ]; then
+        printf "[*] Create systemd service files is set to: [\033[0;32m%s\033[m]\n" "$USE_SYSTEMD"
+    else
+        printf "[!] User selected Cancel."
+        exit 1
+    fi
     cat <<EOF >.settings
-# The directory where the installer is located.
-export COMFYUI_INSTALLER_DIR=$PWD
-
-# The directory where the ComfyUI is located.
-export COMFYUI_DIR=$PWD/ComfyUI
-
-# The gpu to use.
+# The directory where the installer is located:
+export COMFYUI_INSTALLER_DIR=$COMFYUI_INSTALLER_DIR
+# The directory where the ComfyUI is located:
+export COMFYUI_DIR=$COMFYUI_DIR
+# The type of GPU to use:
 export GPU=$GPU
+# The directory where the backups are located:
+export BACKUP_DIR=$BACKUP_DIR
+# The virtual environment directory:
+export VIRTUAL_ENV=$VIRTUAL_ENV
+# Use systemd:
+export USE_SYSTEMD=$USE_SYSTEMD
 
-# The directory where the backups are located.
-export BACKUP_DIR=/media/$USER/DATA/ai-stuff
-
-# The virtual environment directory.
-export VIRTUAL_ENV=$PWD/ComfyUI/venv
 EOF
     printf "[*] Created [\033[0;32m.settings\033[m] file with the following contents:\n\n"
     cat .settings
 }
+
 if [ ! -f .settings ]; then
     printf "[*] [\033[0;32m.settings\033[m] file not found, creating.\n"
-    CREATE_SETTINGS_FILE
-    EXIT
+    ASK_USER_INPUT
+    printf "[*] Created [\033[0;32m.settings\033[m] file.\n"
+    source .settings
 else
     printf "[*] [\033[0;32m.settings\033[m] file found, loading.\n"
     source .settings
 fi
 INSTALL_COMFYUI() {
-    if [ -d ComfyUI ]; then
+    if [ -d "$COMFYUI_DIR" ]; then
         printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
-        cd ComfyUI || exit 1
+        cd "$COMFYUI_DIR" || exit 1
         git pull
     else
-        printf "[*] Installing [\033[0;32mComfyUI\033[m].\n"
-        chmod +x scripts/*.sh
-        ./scripts/install-comfyui.sh >/dev/null 2>&1
+        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui.sh"
         printf "[*] [\033[0;32mComfyUI\033[m] installed.\n"
     fi
-    printf "[*] Creating [\033[0;32mComfyUI.service\033[m] file.\n"
-    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.service"
-[Unit]
-Description=ComfyUI Service
-After=network.target
-
-[Service]
-Restart=on-failure
-RestartSec=5s
-Type=simple
-User=$USER
-Group=$USER
-WorkingDirectory=$COMFYUI_DIR
-ExecStart=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    sudo cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.service" /etc/systemd/system/ComfyUI.service
 }
 
 INSTALL_COMFYUI_MANAGER() {
-    if [ -d ComfyUI/custom_nodes/comfyui-manager ]; then
+    if [ -d "$COMFYUI_DIR/custom_nodes/comfyui-manager" ]; then
         printf "[!] [\033[0;32mComfyUI-Manager\033[m] already exists, updating.\n"
-        cd ComfyUI/custom_nodes/comfyui-manager || exit 1
+        cd "$COMFYUI_DIR/custom_nodes/comfyui-manager" || exit 1
         git pull
     else
-        printf "[*] Installing [\033[0;32mComfyUI-Manager\033[m].\n"
-        chmod +x scripts/*.sh
-        ./scripts/install-comfyui-manager.sh >/dev/null 2>&1
+        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui-manager.sh"
         printf "[*] [\033[0;32mComfyUI-Manager\033[m] installed.\n"
     fi
 }
 INSTALL_COMFYUI_MINI() {
-    if [ -d ComfyUI/custom_nodes/ComfyUIMini ]; then
+    if [ -d "$COMFYUI_DIR/custom_nodes/ComfyUIMini" ]; then
         printf "[!] [\033[0;32mComfyUIMini\033[m] already exists, updating.\n"
-        cd ComfyUI/custom_nodes/ComfyUIMini || exit 1
+        cd "$COMFYUI_DIR/custom_nodes/ComfyUIMini" || exit 1
         git pull
-        chmod +x ./scripts/*.sh
-        ./scripts/update.sh >/dev/null 2>&1
+        chmod +x "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/"*.sh
+        "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/update.sh"
     else
-        printf "[*] Installing [\033[0;32mComfyUIMini\033[m].\n"
-        chmod +x scripts/*.sh
-        ./scripts/install-comfyui-mini.sh >/dev/null 2>&1
+        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui-mini.sh"
         printf "[*] [\033[0;32mComfyUIMini\033[m] installed.\n"
     fi
-    printf "[*] Creating [\033[0;32mComfyUIMini.service\033[m] file.\n"
-    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.service"
-[Unit]
-Description=ComfyUI Mini Service
-After=network.target
-
-[Service]
-Type=simple
-User=$USER
-Group=$USER
-WorkingDirectory=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini
-ExecStart=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    sudo cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.service" /etc/systemd/system/ComfyUIMini.service
 }
 LINKING_DIRS() {
     if [ ! -d "$BACKUP_DIR" ]; then
         printf "[*] [\033[0;32mBackup\033[m] directory not found, creating.\n"
         mkdir -p "$BACKUP_DIR"
-        mv ComfyUI/web "$BACKUP_DIR"
-        mv ComfyUI/user "$BACKUP_DIR"
-        mv ComfyUI/output "$BACKUP_DIR"
-        mv ComfyUI/models "$BACKUP_DIR"
-        mv ComfyUI/input "$BACKUP_DIR"
-        mv ComfyUI/custom_nodes "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/web" "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/user" "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/output" "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/models" "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/input" "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/custom_nodes" "$BACKUP_DIR"
         printf "[*] [\033[0;32mBackup\033[m] directory created.\n"
-        printf "[*] [\033[0;32ComfyUI/webm\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\web\033[m]\n"
-        printf "[*] [\033[0;32mComfyUI/user\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\user\033[m]\n"
-        printf "[*] [\033[0;32mComfyUI/output\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\output\033[m]\n"
-        printf "[*] [\033[0;32mComfyUI/models\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\models\033[m]\n"
-        printf "[*] [\033[0;32mComfyUI/input\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\input\033[m]\n"
-        printf "[*] [\033[0;32mComfyUI/custom_nodes\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\custom_nodes\033[m]\n"
+        printf "[*] [\033[0;32mComfyUI/web\033[m] directory moved to: [\033[0;32m%s\web\033[m]\n" "$BACKUP_DIR"
+        printf "[*] [\033[0;32mComfyUI/user\033[m] directory moved to: [\033[0;32m%s\user\033[m]\n" "$BACKUP_DIR"
+        printf "[*] [\033[0;32mComfyUI/output\033[m] directory moved to: [\033[0;32m%s\output\033[m]\n" "$BACKUP_DIR"
+        printf "[*] [\033[0;32mComfyUI/models\033[m] directory moved to: [\033[0;32m%s\models\033[m]\n" "$BACKUP_DIR"
+        printf "[*] [\033[0;32mComfyUI/input\033[m] directory moved to: [\033[0;32m%s\input\033[m]\n" "$BACKUP_DIR"
+        printf "[*] [\033[0;32mComfyUI/custom_nodes\033[m] directory moved to: [\033[0;32m%s\custom_nodes\033[m]\n" "$BACKUP_DIR"
     fi
-    if [ -d ComfyUI/web ]; then
-        rm -rf ComfyUI/web
+    if [ -d "$COMFYUI_DIR/web" ]; then
+        rm -rf "$COMFYUI_DIR/web"
     fi
-    if [ -d ComfyUI/user ]; then
-        rm -rf ComfyUI/user
+    if [ -d "$COMFYUI_DIR/user" ]; then
+        rm -rf "$COMFYUI_DIR/user"
     fi
-    if [ -d ComfyUI/output ]; then
-        rm -rf ComfyUI/output
+    if [ -d "$COMFYUI_DIR/output" ]; then
+        rm -rf "$COMFYUI_DIR/output"
     fi
-    if [ -d ComfyUI/models ]; then
-        rm -rf ComfyUI/models
+    if [ -d "$COMFYUI_DIR/models" ]; then
+        rm -rf "$COMFYUI_DIR/models"
     fi
-    if [ -d ComfyUI/input ]; then
-        rm -rf ComfyUI/input
+    if [ -d "$COMFYUI_DIR/input" ]; then
+        rm -rf "$COMFYUI_DIR/input"
     fi
-    if [ -d ComfyUI/custom_nodes ]; then
-        rm -rf ComfyUI/custom_nodes
+    if [ -d "$COMFYUI_DIR/custom_nodes" ]; then
+        rm -rf "$COMFYUI_DIR/custom_nodes"
     fi
-    ln -s "$BACKUP_DIR/web" ComfyUI
-    ln -s "$BACKUP_DIR/user" ComfyUI
-    ln -s "$BACKUP_DIR/output" ComfyUI
-    ln -s "$BACKUP_DIR/models" ComfyUI
-    ln -s "$BACKUP_DIR/input" ComfyUI
-    ln -s "$BACKUP_DIR/custom_nodes" ComfyUI
-}
-START_COMFYUI_SERVICE() {
-    printf "\033[32mStarting ComfyUI.service.' \033[0m\n"
-    sudo systemctl daemon-reload
-    sudo systemctl start ComfyUI
-}
-START_COMFYUIMINI_SERVICE() {
-    printf "\033[32mStarting ComfyUIMini.service.' \033[0m\n"
-    sudo systemctl daemon-reload
-    sudo systemctl start ComfyUIMini
+    ln -sf "$BACKUP_DIR/web" "$COMFYUI_DIR"
+    ln -sf "$BACKUP_DIR/user" "$COMFYUI_DIR"
+    ln -sf "$BACKUP_DIR/output" "$COMFYUI_DIR"
+    ln -sf "$BACKUP_DIR/models" "$COMFYUI_DIR"
+    ln -sf "$BACKUP_DIR/input" "$COMFYUI_DIR"
+    ln -sf "$BACKUP_DIR/custom_nodes" "$COMFYUI_DIR"
+    printf "[*] [\033[0;32mLinked\033[m] [%s/web]\n" "$COMFYUI_DIR"
+    printf "[*] [\033[0;32mTo:\033[m] [%s]\n" "$BACKUP_DIR/web"
+    printf "[*] [\033[0;32mLinked\033[m] [%s/user]\n" "$COMFYUI_DIR"
+    printf "[*] [\033[0;32mTo:\033[m] [%s]\n" "$BACKUP_DIR/user"
+    printf "[*] [\033[0;32mLinked\033[m] [%s/output]\n" "$COMFYUI_DIR"
+    printf "[*] [\033[0;32mTo:\033[m] [%s]\n" "$BACKUP_DIR/output"
+    printf "[*] [\033[0;32mLinked\033[m] [%s/models]\n" "$COMFYUI_DIR"
+    printf "[*] [\033[0;32mTo:\033[m] [%s]\n" "$BACKUP_DIR/models"
+    printf "[*] [\033[0;32mLinked\033[m] [%s/input]\n" "$COMFYUI_DIR"
+    printf "[*] [\033[0;32mTo:\033[m] [%s]\n" "$BACKUP_DIR/input"
+    printf "[*] [\033[0;32mLinked\033[m] [%s/custom_nodes]\n" "$COMFYUI_DIR"
+    printf "[*] [\033[0;32mTo:\033[m] [%s]\n" "$BACKUP_DIR/custom_nodes"
 }
 
 INST_DEPS
@@ -213,18 +211,16 @@ INSTALL_COMFYUI
 LINKING_DIRS
 INSTALL_COMFYUI_MANAGER
 INSTALL_COMFYUI_MINI
-START_COMFYUI_SERVICE
-START_COMFYUIMINI_SERVICE
 
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
-chmod +x "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/"*.sh
+chmod +x "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/"*.sh
 
 printf "\033[32mFinished!\033[0m\n\n"
 printf "\033[32mTo Launch ComfyUI manually, use: 'scripts/run_gpu.sh' or 'scripts/run_cpu.sh' \033[0m\n"
 printf "\033[32mTo Launch ComfyUIMini manually, use: 'ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh' \033[0m\n\n"
 
-printf "\033[32mTo start ComfyUI as systemd service, run: 'sudo systemctl start ComfyUI.service' \033[0m\n"
-printf "\033[32mTo start ComfyUIMini as systemd service, run: 'sudo systemctl start ComfyUIMini.service' \033[0m\n\n"
+printf "\033[32mTo Launch ComfyUI as systemd service, run: 'sudo systemctl start ComfyUI.service' \033[0m\n"
+printf "\033[32mTo Launch ComfyUIMini as systemd service, run: 'sudo systemctl start ComfyUIMini.service' \033[0m\n\n"
 
 printf "\033[32mTo enable ComfyUI service at boot, run: 'sudo systemctl enable ComfyUI.service' \033[0m\n"
 printf "\033[32mTo enable ComfyUIMini service at boot, run: 'sudo systemctl enable ComfyUIMini.service' \033[0m\n\n"
@@ -239,4 +235,4 @@ printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:3000' for ComfyUIMini 
 
 # xdg-open http://0.0.0.0:3000
 # xdg-open http://0.0.0.0:8188
-multitail -f "$COMFYUI_INSTALLER_DIR/ComfyUI/user/comfyui.log"
+multitail -f "$COMFYUI_DIR/user/comfyui.log"
