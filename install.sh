@@ -114,28 +114,9 @@ INSTALL_COMFYUI() {
     else
         printf "[*] Installing [\033[0;32mComfyUI\033[m].\n"
         chmod +x scripts/*.sh
-        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui.sh" >/dev/null 2>&1
+        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui.sh"
         printf "[*] [\033[0;32mComfyUI\033[m] installed.\n"
     fi
-    printf "[*] Creating [\033[0;32mComfyUI.service\033[m] file.\n"
-    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.service"
-[Unit]
-Description=ComfyUI Service
-After=network.target
-
-[Service]
-Restart=on-failure
-RestartSec=5s
-Type=simple
-User=$USER
-Group=$USER
-WorkingDirectory=$COMFYUI_DIR
-ExecStart=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    sudo cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.service" /etc/systemd/system/ComfyUI.service
 }
 
 INSTALL_COMFYUI_MANAGER() {
@@ -146,7 +127,7 @@ INSTALL_COMFYUI_MANAGER() {
     else
         printf "[*] Installing [\033[0;32mComfyUI-Manager\033[m].\n"
         chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
-        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui-manager.sh" >/dev/null 2>&1
+        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui-manager.sh"
         printf "[*] [\033[0;32mComfyUI-Manager\033[m] installed.\n"
     fi
 }
@@ -156,30 +137,13 @@ INSTALL_COMFYUI_MINI() {
         cd "$COMFYUI_DIR/custom_nodes/ComfyUIMini" || exit 1
         git pull
         chmod +x "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/"*.sh
-        "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/update.sh" >/dev/null 2>&1
+        "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/update.sh"
     else
         printf "[*] Installing [\033[0;32mComfyUIMini\033[m].\n"
         chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
-        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui-mini.sh" >/dev/null 2>&1
+        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui-mini.sh"
         printf "[*] [\033[0;32mComfyUIMini\033[m] installed.\n"
     fi
-    printf "[*] Creating [\033[0;32mComfyUIMini.service\033[m] file.\n"
-    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.service"
-[Unit]
-Description=ComfyUI Mini Service
-After=network.target
-
-[Service]
-Type=simple
-User=$USER
-Group=$USER
-WorkingDirectory=$COMFYUI_DIR/custom_nodes/ComfyUIMini
-ExecStart=$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/start.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    sudo cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.service" /etc/systemd/system/ComfyUIMini.service
 }
 LINKING_DIRS() {
     if [ ! -d "$BACKUP_DIR" ]; then

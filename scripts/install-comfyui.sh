@@ -8,11 +8,11 @@ fi
 if [ -d "$COMFYUI_INSTALLER_DIR/ComfyUI" ]; then
     printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
     cd "$COMFYUI_INSTALLER_DIR"/ComfyUI || exit 1
-    git pull
+    git pull >/dev/null 2>&1
 else
     printf "[*] Installing [\033[0;32mComfyUI\033[m] and [\033[0;32mComfyUI-Manager\033[m]\n"
     cd "$COMFYUI_INSTALLER_DIR" || exit 1
-    git clone https://github.com/comfyanonymous/ComfyUI
+    git clone https://github.com/comfyanonymous/ComfyUI >/dev/null 2>&1
 fi
 
 cd "$COMFYUI_INSTALLER_DIR"/ComfyUI || exit 1
@@ -22,10 +22,10 @@ source "$VIRTUAL_ENV/bin/activate"
 if [ "$GPU" == "AMD" ]; then
 
     # You might want to try using a newer or nightly version here if ComfyUI is not working for you.
-    # pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm6.2.4
-    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2
-    pip install -r requirements.txt
-    pip install -r custom_nodes/comfyui-manager/requirements.txt
+    # pip install -q --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm6.2.4
+    pip install -q torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2
+    pip install -q -r requirements.txt
+    pip install -q -r custom_nodes/comfyui-manager/requirements.txt
 
 fi
 if [ "$GPU" == "NVIDIA" ]; then
@@ -36,9 +36,9 @@ if [ "$GPU" == "NVIDIA" ]; then
 
     pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu$cwhl
     # You might want to try using a newer or nightly version here if ComfyUI is not working for you.
-    pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu$cwhl
-    pip install -r requirements.txt
-    pip install -r custom_nodes/comfyui-manager/requirements.txt
+    pip install -q --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu$cwhl
+    pip install -q -r requirements.txt
+    pip install -q -r custom_nodes/comfyui-manager/requirements.txt
 
 fi
 # find custom_nodes/ -type f -name 'requirements.txt' -exec pip install -r {} \;
@@ -92,5 +92,27 @@ EOF
         --set-icon="$icon_path" \
         "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
 }
+CREATE_SERVICE() {
+    printf "[*] Creating [\033[0;32mComfyUI.service\033[m] file.\n"
+    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.service"
+[Unit]
+Description=ComfyUI Service
+After=network.target
+
+[Service]
+Restart=on-failure
+RestartSec=5s
+Type=simple
+User=$USER
+Group=$USER
+WorkingDirectory=$COMFYUI_DIR
+ExecStart=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    sudo cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.service" /etc/systemd/system/ComfyUI.service
+}
 CREATE_RUNFILES
+CREATE_SERVICE
 ADD_TO_DESKTOP

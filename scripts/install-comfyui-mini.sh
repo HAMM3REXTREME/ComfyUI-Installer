@@ -9,7 +9,7 @@ if [ -d "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini" ]; then
     printf "[!] [\033[0;32mComfyUIMini\033[m] already exists, updating.\n"
     cd "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini" || exit 1
     chmod +x ./scripts/update.sh
-    ./scripts/update.sh
+    ./scripts/update.sh >/dev/null 2>&1
 else
     printf "[*] Cloning [\033[0;32mComfyUIMini\033[m]\n"
     git clone https://github.com/ImDarkTom/ComfyUIMini "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini" >/dev/null 2>&1
@@ -21,14 +21,14 @@ else
     fi
 
     printf "[*] Installing dependencies for ComfyUIMini\n"
-    npm install
+    npm install >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         printf "[!] Failed to update dependencies. Please check your internet connection and try again.\n"
         exit 1
     fi
 
     printf "[*] Building ComfyUIMini\n"
-    npm run build
+    npm run build >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         printf "[!] Build failed. Check the console for more information.\n"
         exit 1
@@ -69,4 +69,25 @@ EOF
         --set-icon="$icon_path" \
         "$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop"
 }
+CREATE_SERVICE() {
+    printf "[*] Creating [\033[0;32mComfyUIMini.service\033[m] file.\n"
+    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.service"
+[Unit]
+Description=ComfyUI Mini Service
+After=network.target
+
+[Service]
+Type=simple
+User=$USER
+Group=$USER
+WorkingDirectory=$COMFYUI_DIR/custom_nodes/ComfyUIMini
+ExecStart=$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/start.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    sudo cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.service" /etc/systemd/system/ComfyUIMini.service
+}
+
+CREATE_SERVICE
 ADD_TO_DESKTOP
