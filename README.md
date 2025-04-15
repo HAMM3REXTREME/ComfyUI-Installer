@@ -11,12 +11,12 @@ Tested on Ubuntu + Nvidia GPU (https://github.com/itsdarklikehell).
 ![ComfyUI Screenshot](graphics/comfyui_screenshot.png)
 _Note:_ This is not the official ComfyUI icon.
 
+# Installs ComfyUI, ComfyUI Manager and ComfyUIMini in a python venv
+
 ## A Quick, Guided install (no .settings file present) (SHOULD ALSO WORK ON ALL DISTROS)
 
 You will need to have `python`, `python-venv` and `pip` on your system.
 Make sure to install for your GPU Vendor (AMD/NVIDIA):
-
-# Installs ComfyUI, ComfyUI Manager and ComfyUIMini in a python venv
 ```sh
 git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer && ./install.sh
 ```
@@ -26,11 +26,12 @@ git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Ins
 You will need to have `python`, `python-venv` and `pip` on your system.
 Make sure to install for your GPU Vendor (AMD/NVIDIA):
 
-# Installs ComfyUI, ComfyUI Manager and ComfyUIMini in a python venv
 ```sh
 git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer
 ```
+
 Create a .settings file containing the following:
+
 ```sh
 # The directory where the installer is located:
 export COMFYUI_INSTALLER_DIR=~/ComfyUI-Installer
@@ -45,7 +46,9 @@ export VIRTUAL_ENV=~/ComfyUI-Installer/ComfyUI/venv
 # Use systemd:
 export USE_SYSTEMD=true
 ```
+
 Then run the install script:
+
 ```sh
 ./install.sh
 ```
