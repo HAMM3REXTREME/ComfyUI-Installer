@@ -34,7 +34,7 @@ if [ "$GPU" == "NVIDIA" ]; then
     printf "[*] Found CUDA [\033[0;32m%s\033[m]\n" "$CUDA_VERSION"
     printf "[*] Using pytorch [\033[0;32mcu%s\033[m]\n" "$cwhl"
 
-    pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu$cwhl
+    pip install -q torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu$cwhl
     # You might want to try using a newer or nightly version here if ComfyUI is not working for you.
     pip install -q --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu$cwhl
     pip install -q -r requirements.txt
