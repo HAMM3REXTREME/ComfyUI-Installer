@@ -32,48 +32,51 @@ INST_DEPS() {
         sudo apt install multitail -y
     fi
 }
+ASK_USER_INPUT() {
+    eval "$(resize)"
 
-CREATE_SETTINGS_FILE() {
-    DEF_COMFYUI_INSTALLER_DIR="$PWD"
-    DEF_COMFYUI_DIR="$PWD/ComfyUI"
-    DEF_GPU="NVIDIA"
-    DEF_VIRTUAL_ENV="$PWD/ComfyUI/venv"
-
+    COMFYUI_INSTALLER_DIR=$(whiptail --title "Installer directory." --inputbox "Enter the directory where the installer currently is located. (Default: $PWD)" $LINES $COLUMNS "$PWD" 3>&1 1>&2 2>&3)
+    COMFYUI_DIR=$(whiptail --title "Gpu Selection." --inputbox "Where should ComfyUI be installed? (Default: $PWD/ComfyUI)" $LINES $COLUMNS "$PWD/ComfyUI" 3>&1 1>&2 2>&3)
+    BACKUP_DIR=$(whiptail --title "Backup directory." --inputbox "Where should the backup directory be created? (Default: $PWD/backup)" $LINES $COLUMNS "$PWD/backup" 3>&1 1>&2 2>&3)
+    GPU=$(whiptail --menu "Select the GPU type." $LINES $COLUMNS $((LINES - 8)) \
+        "NVIDIA" "For Nvidia Gpu's." \
+        "AMD" "For AMD Gpu's." 3>&1 1>&2 2>&3)
+    VIRTUAL_ENV=$(whiptail --inputbox "Where should the virtual environment directory be created? (Default: $PWD/ComfyUI/venv)" $LINES $COLUMNS "$PWD/ComfyUI/venv" 3>&1 1>&2 2>&3)
     if [ -z "$COMFYUI_INSTALLER_DIR" ]; then
-        COMFYUI_INSTALLER_DIR=$DEF_COMFYUI_INSTALLER_DIR
+        COMFYUI_INSTALLER_DIR=$PWD
     fi
     if [ -z "$COMFYUI_DIR" ]; then
-        COMFYUI_DIR=$DEF_COMFYUI_DIR
+        COMFYUI_DIR=$PWD/ComfyUI
     fi
     if [ -z "$GPU" ]; then
-        GPU=$DEF_GPU
+        GPU="NVIDIA"
     fi
     if [ -z "$VIRTUAL_ENV" ]; then
-        VIRTUAL_ENV=$DEF_VIRTUAL_ENV
+        VIRTUAL_ENV=$PWD/ComfyUI/venv
     fi
-
     cat <<EOF >.settings
-# The directory where the installer is located.
+# The directory where the installer is located:
 export COMFYUI_INSTALLER_DIR=$PWD
 
-# The directory where the ComfyUI is located.
+# The directory where the ComfyUI is located:
 export COMFYUI_DIR=$PWD/ComfyUI
 
-# The gpu to use.
+# The type of GPU to use:
 export GPU=$GPU
 
-# The directory where the backups are located.
+# The directory where the backups are located:
 export BACKUP_DIR=/media/$USER/DATA/ai-stuff
 
-# The virtual environment directory.
+# The virtual environment directory:
 export VIRTUAL_ENV=$PWD/ComfyUI/venv
 EOF
     printf "[*] Created [\033[0;32m.settings\033[m] file with the following contents:\n\n"
     cat .settings
 }
+
 if [ ! -f .settings ]; then
     printf "[*] [\033[0;32m.settings\033[m] file not found, creating.\n"
-    CREATE_SETTINGS_FILE
+    ASK_USER_INPUT
     EXIT
 else
     printf "[*] [\033[0;32m.settings\033[m] file found, loading.\n"
@@ -158,12 +161,12 @@ LINKING_DIRS() {
     if [ ! -d "$BACKUP_DIR" ]; then
         printf "[*] [\033[0;32mBackup\033[m] directory not found, creating.\n"
         mkdir -p "$BACKUP_DIR"
-        mv ComfyUI/web "$BACKUP_DIR"
-        mv ComfyUI/user "$BACKUP_DIR"
-        mv ComfyUI/output "$BACKUP_DIR"
-        mv ComfyUI/models "$BACKUP_DIR"
-        mv ComfyUI/input "$BACKUP_DIR"
-        mv ComfyUI/custom_nodes "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/web" "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/user" "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/output" "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/models" "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/input" "$BACKUP_DIR"
+        mv "$COMFYUI_INSTALLER_DIR/custom_nodes" "$BACKUP_DIR"
         printf "[*] [\033[0;32mBackup\033[m] directory created.\n"
         printf "[*] [\033[0;32ComfyUI/webm\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\web\033[m]\n"
         printf "[*] [\033[0;32mComfyUI/user\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\user\033[m]\n"
@@ -172,30 +175,30 @@ LINKING_DIRS() {
         printf "[*] [\033[0;32mComfyUI/input\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\input\033[m]\n"
         printf "[*] [\033[0;32mComfyUI/custom_nodes\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\custom_nodes\033[m]\n"
     fi
-    if [ -d ComfyUI/web ]; then
-        rm -rf ComfyUI/web
+    if [ -d "$COMFYUI_INSTALLER_DIR/web" ]; then
+        rm -rf "$COMFYUI_INSTALLER_DIR/web"
     fi
-    if [ -d ComfyUI/user ]; then
-        rm -rf ComfyUI/user
+    if [ -d "$COMFYUI_INSTALLER_DIR/user" ]; then
+        rm -rf "$COMFYUI_INSTALLER_DIR/user"
     fi
-    if [ -d ComfyUI/output ]; then
-        rm -rf ComfyUI/output
+    if [ -d "$COMFYUI_INSTALLER_DIR/output" ]; then
+        rm -rf "$COMFYUI_INSTALLER_DIR/output"
     fi
-    if [ -d ComfyUI/models ]; then
-        rm -rf ComfyUI/models
+    if [ -d "$COMFYUI_INSTALLER_DIR/models" ]; then
+        rm -rf "$COMFYUI_INSTALLER_DIR/models"
     fi
-    if [ -d ComfyUI/input ]; then
-        rm -rf ComfyUI/input
+    if [ -d "$COMFYUI_INSTALLER_DIR/input" ]; then
+        rm -rf "$COMFYUI_INSTALLER_DIR/input"
     fi
-    if [ -d ComfyUI/custom_nodes ]; then
-        rm -rf ComfyUI/custom_nodes
+    if [ -d "$COMFYUI_INSTALLER_DIR/custom_nodes" ]; then
+        rm -rf "$COMFYUI_INSTALLER_DIR/custom_nodes"
     fi
-    ln -s "$BACKUP_DIR/web" ComfyUI
-    ln -s "$BACKUP_DIR/user" ComfyUI
-    ln -s "$BACKUP_DIR/output" ComfyUI
-    ln -s "$BACKUP_DIR/models" ComfyUI
-    ln -s "$BACKUP_DIR/input" ComfyUI
-    ln -s "$BACKUP_DIR/custom_nodes" ComfyUI
+    ln -sf "$BACKUP_DIR/web" "$COMFYUI_INSTALLER_DIR/ComfyUI"
+    ln -sf "$BACKUP_DIR/user" "$COMFYUI_INSTALLER_DIR/ComfyUI"
+    ln -sf "$BACKUP_DIR/output" "$COMFYUI_INSTALLER_DIR/ComfyUI"
+    ln -sf "$BACKUP_DIR/models" "$COMFYUI_INSTALLER_DIR/ComfyUI"
+    ln -sf "$BACKUP_DIR/input" "$COMFYUI_INSTALLER_DIR/ComfyUI"
+    ln -sf "$BACKUP_DIR/custom_nodes" "$COMFYUI_INSTALLER_DIR/ComfyUI"
 }
 START_COMFYUI_SERVICE() {
     printf "\033[32mStarting ComfyUI.service.' \033[0m\n"
@@ -207,7 +210,7 @@ START_COMFYUIMINI_SERVICE() {
     sudo systemctl daemon-reload
     sudo systemctl start ComfyUIMini
 }
-ADD_TO_DESKTOP(){
+ADD_TO_DESKTOP() {
     printf "[*] Adding ComfyUI to desktop.\n"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
 [Desktop Entry]
@@ -220,7 +223,7 @@ Icon=$COMFYUI_INSTALLER_DIR/graphics/comfyui.svg
 Type=Application
 NoDisplay=false
 EOF
-cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop" ~/.local/share/applications/ComfyUI.desktop
+    cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop" ~/.local/share/applications/ComfyUI.desktop
     chmod +x ~/.local/share/applications/ComfyUI.desktop
     printf "[*] Adding ComfyUIMini to desktop.\n"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop"
@@ -239,15 +242,15 @@ EOF
     exec_path="$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"   # Launch script
     icon_path="$COMFYUI_INSTALLER_DIR/graphics/comfyui.svg" # ComfyUI Icon
     desktop-file-install \
-    --dir="$HOME/.local/share/applications/" \
-    --set-key=Path \
-    --set-value="$PWD" \
-    --set-key=Exec \
-    --set-value="$exec_path" \
-    --set-icon="$icon_path" \
-    "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
+        --dir="$HOME/.local/share/applications/" \
+        --set-key=Path \
+        --set-value="$PWD" \
+        --set-key=Exec \
+        --set-value="$exec_path" \
+        --set-icon="$icon_path" \
+        "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
 }
-CREATE_RUNFILES(){
+CREATE_RUNFILES() {
     printf "[*] Adding runfile to scripts.\n"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
 #!/bin/bash
@@ -262,7 +265,7 @@ cd "$COMFYUI_INSTALLER_DIR/ComfyUI"
 source venv/bin/activate
 python main.py --listen 0.0.0.0 --preview-method auto --cpu
 EOF
-    chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh" 
+    chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
 }
 INST_DEPS
 INSTALL_COMFYUI

@@ -1,14 +1,14 @@
-# The directory where the installer is located.
+# The directory where the installer is located:
 export COMFYUI_INSTALLER_DIR=/media/rizzo/DATA/ComfyUI-Installer
 
-# The directory where the ComfyUI is located.
+# The directory where the ComfyUI is located:
 export COMFYUI_DIR=/media/rizzo/DATA/ComfyUI-Installer/ComfyUI
 
-# The gpu to use.
+# The type of GPU to use:
 export GPU=NVIDIA
 
-# The directory where the backups are located.
+# The directory where the backups are located:
 export BACKUP_DIR=/media/rizzo/DATA/ai-stuff
 
-# The virtual environment directory.
+# The virtual environment directory:
 export VIRTUAL_ENV=/media/rizzo/DATA/ComfyUI-Installer/ComfyUI/venv
