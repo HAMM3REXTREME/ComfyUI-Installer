@@ -59,7 +59,10 @@ Then run the install script:
    `git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer`
 
 2. Then run the install script:
-   `./install.sh` # Upon first run, if there is no .settings file present it will ask you for some information and it stores that in a .settings file like this:
+   `./install.sh`
+   
+   Upon first run, if there is no .settings file present it will ask you for some information and it stores that in a .settings file like this:
+
    ```sh
    # The directory where the installer is located:
    export COMFYUI_INSTALLER_DIR=~/ComfyUI-Installer
@@ -74,6 +77,7 @@ Then run the install script:
    # Use systemd:
    export USE_SYSTEMD=true
    ```
+   
    If do you have a .settings file already present, it will just use that and then proceeds with the installation.
 
 3. When the install script has finished, if you have chosen to use a systemd service, ComfyUI should now be starting/running, you can check the status of the service with:
@@ -82,7 +86,8 @@ Then run the install script:
    `sudo systemctl start ComfyUI.service`
    If you want to enable it to start on boot, you can do so with:
    `sudo systemctl enable ComfyUI.service`
-If you have chosen not to use systemd, you can start ComfyUI with one of the during installation created run scrips:
+
+   If you have chosen not to use systemd, you can start ComfyUI with one of the during installation created run scrips:
    `./scripts/run_gpu.sh`
    or
    `./scripts/run_cpu.sh`.
