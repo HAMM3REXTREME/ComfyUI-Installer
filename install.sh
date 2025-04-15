@@ -37,7 +37,7 @@ ASK_USER_INPUT() {
     COMFYUI_INSTALLER_DIR=$(whiptail --title "Installer directory." --inputbox "Enter the directory where the installer currently is located. (Default: $PWD)" $LINES $COLUMNS "$PWD" 3>&1 1>&2 2>&3)
     exitstatus=$?
     if [ $exitstatus == 0 ]; then
-        printf "[*] [\033[0;32mInstaller\033[m] directory: [\033[0;32m$COMFYUI_INSTALLER_DIR\033[m]\n"
+        printf "[*] [\033[0;32mInstaller\033[m] directory: [\033[0;32m%s\033[m]\n" "$COMFYUI_INSTALLER_DIR"
     else
         printf "[!] User selected Cancel."
         exit 1
@@ -46,7 +46,7 @@ ASK_USER_INPUT() {
     COMFYUI_DIR=$(whiptail --title "Gpu Selection." --inputbox "Where should ComfyUI be installed? (Default: $PWD/ComfyUI)" $LINES $COLUMNS "$PWD/ComfyUI" 3>&1 1>&2 2>&3)
     exitstatus=$?
     if [ $exitstatus == 0 ]; then
-        printf "[*] [\033[0;32mInstaller\033[m] directory: [\033[0;32m$COMFYUI_DIR\033[m]\n"
+        printf "[*] [\033[0;32mInstaller\033[m] directory: [\033[0;32m%s\033[m]\n" "$COMFYUI_DIR"
     else
         printf "[!] User selected Cancel."
         exit 1
@@ -55,7 +55,7 @@ ASK_USER_INPUT() {
     BACKUP_DIR=$(whiptail --title "Backup directory." --inputbox "Where should the backup directory be created? (Default: $PWD/backup)" $LINES $COLUMNS "$PWD/backup" 3>&1 1>&2 2>&3)
     exitstatus=$?
     if [ $exitstatus == 0 ]; then
-        printf "[*] [\033[0;32mBackup\033[m] directory: [\033[0;32m$BACKUP_DIR\033[m]\n"
+        printf "[*] [\033[0;32mBackup\033[m] directory: [\033[0;32m%s\033[m]\n" "$BACKUP_DIR"
     else
         printf "[!] User selected Cancel."
         exit 1
@@ -67,7 +67,7 @@ ASK_USER_INPUT() {
     VIRTUAL_ENV=$(whiptail --inputbox "Where should the virtual environment directory be created? (Default: $PWD/ComfyUI/venv)" $LINES $COLUMNS "$PWD/ComfyUI/venv" 3>&1 1>&2 2>&3)
     exitstatus=$?
     if [ $exitstatus == 0 ]; then
-        printf "[*] [\033[0;32mVirtual Environment\033[m] directory: [\033[0;32m$VIRTUAL_ENV\033[m]\n"
+        printf "[*] [\033[0;32mVirtual Environment\033[m] directory: [\033[0;32m%s\033[m]\n" "$VIRTUAL_ENV"
     else
         printf "[!] User selected Cancel."
         exit 1
@@ -184,12 +184,12 @@ LINKING_DIRS() {
         mv "$COMFYUI_INSTALLER_DIR/input" "$BACKUP_DIR"
         mv "$COMFYUI_INSTALLER_DIR/custom_nodes" "$BACKUP_DIR"
         printf "[*] [\033[0;32mBackup\033[m] directory created.\n"
-        printf "[*] [\033[0;32ComfyUI/webm\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\web\033[m]\n"
-        printf "[*] [\033[0;32mComfyUI/user\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\user\033[m]\n"
-        printf "[*] [\033[0;32mComfyUI/output\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\output\033[m]\n"
-        printf "[*] [\033[0;32mComfyUI/models\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\models\033[m]\n"
-        printf "[*] [\033[0;32mComfyUI/input\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\input\033[m]\n"
-        printf "[*] [\033[0;32mComfyUI/custom_nodes\033[m] directory moved to: [\033[0;32m$BACKUP_DIR\custom_nodes\033[m]\n"
+        printf "[*] [\033[0;32ComfyUI/webm\033[m] directory moved to: [\033[0;32m%s\web\033[m]\n" "$BACKUP_DIR"
+        printf "[*] [\033[0;32mComfyUI/user\033[m] directory moved to: [\033[0;32m%s\user\033[m]\n" "$BACKUP_DIR"
+        printf "[*] [\033[0;32mComfyUI/output\033[m] directory moved to: [\033[0;32m%s\output\033[m]\n" "$BACKUP_DIR"
+        printf "[*] [\033[0;32mComfyUI/models\033[m] directory moved to: [\033[0;32m%s\models\033[m]\n" "$BACKUP_DIR"
+        printf "[*] [\033[0;32mComfyUI/input\033[m] directory moved to: [\033[0;32m%s\input\033[m]\n" "$BACKUP_DIR"
+        printf "[*] [\033[0;32mComfyUI/custom_nodes\033[m] directory moved to: [\033[0;32m%s\custom_nodes\033[m]\n" "$BACKUP_DIR"
     fi
     if [ -d "$COMFYUI_INSTALLER_DIR/web" ]; then
         rm -rf "$COMFYUI_INSTALLER_DIR/web"
@@ -215,12 +215,12 @@ LINKING_DIRS() {
     ln -sf "$BACKUP_DIR/models" "$COMFYUI_DIR"
     ln -sf "$BACKUP_DIR/input" "$COMFYUI_DIR"
     ln -sf "$BACKUP_DIR/custom_nodes" "$COMFYUI_DIR"
-    printf "[*] [\033[0;32mComfyUI/webm\033[m] directory linked to: [\033[0;32m$BACKUP_DIR\web\033[m]\n"
-    printf "[*] [\033[0;32mComfyUI/user\033[m] directory linked to: [\033[0;32m$BACKUP_DIR\user\033[m]\n"
-    printf "[*] [\033[0;32mComfyUI/output\033[m] directory linked to: [\033[0;32m$BACKUP_DIR\output\033[m]\n"
-    printf "[*] [\033[0;32mComfyUI/models\033[m] directory linked to: [\033[0;32m$BACKUP_DIR\models\033[m]\n"
-    printf "[*] [\033[0;32mComfyUI/input\033[m] directory linked to: [\033[0;32m$BACKUP_DIR\input\033[m]\n"
-    printf "[*] [\033[0;32mComfyUI/custom_nodes\033[m] directory linked to: [\033[0;32m$BACKUP_DIR\custom_nodes\033[m]\n"
+    printf "[*] [\033[0;32mComfyUI/webm\033[m] directory linked to: [\033[0;32m%s\web\033[m]\n" "$BACKUP_DIR"
+    printf "[*] [\033[0;32mComfyUI/user\033[m] directory linked to: [\033[0;32m%s\user\033[m]\n" "$BACKUP_DIR"
+    printf "[*] [\033[0;32mComfyUI/output\033[m] directory linked to: [\033[0;32m%s\output\033[m]\n" "$BACKUP_DIR"
+    printf "[*] [\033[0;32mComfyUI/models\033[m] directory linked to: [\033[0;32m%s\models\033[m]\n" "$BACKUP_DIR"
+    printf "[*] [\033[0;32mComfyUI/input\033[m] directory linked to: [\033[0;32m%s\input\033[m]\n" "$BACKUP_DIR"
+    printf "[*] [\033[0;32mComfyUI/custom_nodes\033[m] directory linked to: [\033[0;32m%s\custom_nodes\033[m]\n" "$BACKUP_DIR"
 
 }
 START_COMFYUI_SERVICE() {
@@ -234,7 +234,7 @@ START_COMFYUIMINI_SERVICE() {
     sudo systemctl start ComfyUIMini
 }
 ADD_TO_DESKTOP() {
-    printf "[*] Creating $COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
+    printf "[*] Creating %s/scripts/ComfyUI.desktop" "$COMFYUI_INSTALLER_DIR"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
 [Desktop Entry]
 Name=ComfyUI
@@ -249,7 +249,7 @@ EOF
     cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop" ~/.local/share/applications/ComfyUI.desktop
     chmod +x ~/.local/share/applications/ComfyUI.desktop
 
-    printf "[*] Creating $COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop"
+    printf "[*] Creating %s/scripts/ComfyUIMini.desktop" "$COMFYUI_INSTALLER_DIR"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop"
 [Desktop Entry]
 Name=ComfyUIMini
@@ -289,7 +289,7 @@ EOF
         "$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop"
 }
 CREATE_RUNFILES() {
-    printf "[*] Creating $COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh.\n"
+    printf "[*] Creating %s/scripts/run_gpu.sh.\n" "$COMFYUI_INSTALLER_DIR"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
 #!/bin/bash
 cd "$COMFYUI_DIR" || exit 1
@@ -298,7 +298,7 @@ python main.py --listen 0.0.0.0 --preview-method auto
 EOF
     chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
 
-    printf "[*] Creating $COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh.\n"
+    printf "[*] Creating %s/scripts/run_cpu.sh.\n" "$COMFYUI_INSTALLER_DIR"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
 #!/bin/bash
 cd "$COMFYUI_DIR" || exit 1
