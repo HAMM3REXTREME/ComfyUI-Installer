@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
 set -e
-if [ ! -f ../.settings ]; then
+if [ ! -f .settings ]; then
     printf "[!] Please run install.sh first!\n"
+    exit 1
 else
-    source ../.settings
+    source .settings
 fi
 if [ -d "$COMFYUI_INSTALLER_DIR/ComfyUI" ]; then
     printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
     cd "$COMFYUI_INSTALLER_DIR"/ComfyUI || exit 1
     git pull >/dev/null 2>&1
 else
-    printf "[*] Installing [\033[0;32mComfyUI\033[m] and [\033[0;32mComfyUI-Manager\033[m]\n"
+    printf "[*] Installing [\033[0;32mComfyUI\033[m]\n"
     cd "$COMFYUI_INSTALLER_DIR" || exit 1
     git clone https://github.com/comfyanonymous/ComfyUI >/dev/null 2>&1
 fi
 
-cd "$COMFYUI_INSTALLER_DIR"/ComfyUI || exit 1
+cd "$COMFYUI_DIR" || exit 1
 python -m venv "$VIRTUAL_ENV"
 source "$VIRTUAL_ENV/bin/activate"
 
@@ -24,8 +25,7 @@ if [ "$GPU" == "AMD" ]; then
     # You might want to try using a newer or nightly version here if ComfyUI is not working for you.
     # pip install -q --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm6.2.4
     pip install -q torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2
-    pip install -q -r requirements.txt
-    pip install -q -r custom_nodes/comfyui-manager/requirements.txt
+    pip install -q -r "$COMFYUI_DIR/requirements.txt"
 
 fi
 if [ "$GPU" == "NVIDIA" ]; then
@@ -37,9 +37,7 @@ if [ "$GPU" == "NVIDIA" ]; then
     pip install -q torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu$cwhl
     # You might want to try using a newer or nightly version here if ComfyUI is not working for you.
     pip install -q --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu$cwhl
-    pip install -q -r requirements.txt
-    pip install -q -r custom_nodes/comfyui-manager/requirements.txt
-
+    pip install -q -r "$COMFYUI_DIR/requirements.txt"
 fi
 # find custom_nodes/ -type f -name 'requirements.txt' -exec pip install -r {} \;
 

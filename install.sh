@@ -112,8 +112,6 @@ INSTALL_COMFYUI() {
         cd "$COMFYUI_DIR" || exit 1
         git pull
     else
-        printf "[*] Installing [\033[0;32mComfyUI\033[m].\n"
-        chmod +x scripts/*.sh
         "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui.sh"
         printf "[*] [\033[0;32mComfyUI\033[m] installed.\n"
     fi
@@ -125,8 +123,6 @@ INSTALL_COMFYUI_MANAGER() {
         cd "$COMFYUI_DIR/custom_nodes/comfyui-manager" || exit 1
         git pull
     else
-        printf "[*] Installing [\033[0;32mComfyUI-Manager\033[m].\n"
-        chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
         "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui-manager.sh"
         printf "[*] [\033[0;32mComfyUI-Manager\033[m] installed.\n"
     fi
@@ -139,8 +135,6 @@ INSTALL_COMFYUI_MINI() {
         chmod +x "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/"*.sh
         "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/update.sh"
     else
-        printf "[*] Installing [\033[0;32mComfyUIMini\033[m].\n"
-        chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
         "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui-mini.sh"
         printf "[*] [\033[0;32mComfyUIMini\033[m] installed.\n"
     fi

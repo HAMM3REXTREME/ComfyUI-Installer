@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
 set -e
-if [ ! -f ../.settings ]; then
+if [ ! -f .settings ]; then
     printf "[!] Please run install.sh first!\n"
+    exit 1
 else
-    source ../.settings
+    source .settings
 fi
-if [ -d "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini" ]; then
+if [ -d "$COMFYUI_DIR/custom_nodes/ComfyUIMini" ]; then
     printf "[!] [\033[0;32mComfyUIMini\033[m] already exists, updating.\n"
-    cd "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini" || exit 1
+    cd "$COMFYUI_DIR/custom_nodes/ComfyUIMini" || exit 1
     chmod +x ./scripts/update.sh
     ./scripts/update.sh >/dev/null 2>&1
 else
     printf "[*] Cloning [\033[0;32mComfyUIMini\033[m]\n"
-    git clone https://github.com/ImDarkTom/ComfyUIMini "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini" >/dev/null 2>&1
-    cd "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini" || exit 1
+    git clone https://github.com/ImDarkTom/ComfyUIMini "$COMFYUI_DIR/custom_nodes/ComfyUIMini" >/dev/null 2>&1
+    cd "$COMFYUI_DIR/custom_nodes/ComfyUIMini" || exit 1
     chmod +x ./scripts/*.sh
     if ! command -v npm &>/dev/null; then
         printf "[!] [\033[0;32mNPM\033[m] is not installed. Please install NPM and Node.js and try again.\n"
