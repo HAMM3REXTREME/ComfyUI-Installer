@@ -199,23 +199,23 @@ LINKING_DIRS() {
         printf "[*] [\033[0;32mComfyUI/input\033[m] directory moved to: [\033[0;32m%s\input\033[m]\n" "$BACKUP_DIR"
         printf "[*] [\033[0;32mComfyUI/custom_nodes\033[m] directory moved to: [\033[0;32m%s\custom_nodes\033[m]\n" "$BACKUP_DIR"
     fi
-    if [ -d "$COMFYUI_INSTALLER_DIR/web" ]; then
-        rm -rf "$COMFYUI_INSTALLER_DIR/web"
+    if [ -d "$COMFYUI_DIR/web" ]; then
+        rm -rf "$COMFYUI_DIR/web"
     fi
-    if [ -d "$COMFYUI_INSTALLER_DIR/user" ]; then
-        rm -rf "$COMFYUI_INSTALLER_DIR/user"
+    if [ -d "$COMFYUI_DIR/user" ]; then
+        rm -rf "$COMFYUI_DIR/user"
     fi
-    if [ -d "$COMFYUI_INSTALLER_DIR/output" ]; then
-        rm -rf "$COMFYUI_INSTALLER_DIR/output"
+    if [ -d "$COMFYUI_DIR/output" ]; then
+        rm -rf "$COMFYUI_DIR/output"
     fi
-    if [ -d "$COMFYUI_INSTALLER_DIR/models" ]; then
-        rm -rf "$COMFYUI_INSTALLER_DIR/models"
+    if [ -d "$COMFYUI_DIR/models" ]; then
+        rm -rf "$COMFYUI_DIR/models"
     fi
-    if [ -d "$COMFYUI_INSTALLER_DIR/input" ]; then
-        rm -rf "$COMFYUI_INSTALLER_DIR/input"
+    if [ -d "$COMFYUI_DIR/input" ]; then
+        rm -rf "$COMFYUI_DIR/input"
     fi
-    if [ -d "$COMFYUI_INSTALLER_DIR/custom_nodes" ]; then
-        rm -rf "$COMFYUI_INSTALLER_DIR/custom_nodes"
+    if [ -d "$COMFYUI_DIR/custom_nodes" ]; then
+        rm -rf "$COMFYUI_DIR/custom_nodes"
     fi
     ln -sf "$BACKUP_DIR/web" "$COMFYUI_DIR"
     ln -sf "$BACKUP_DIR/user" "$COMFYUI_DIR"
