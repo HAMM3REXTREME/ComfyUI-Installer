@@ -13,7 +13,7 @@ _Note:_ This is not the official ComfyUI icon.
 
 # Installs ComfyUI, ComfyUI Manager and ComfyUIMini in a python venv
 
-## A Quick, Guided install (no .settings file present) (SHOULD ALSO WORK ON ALL DISTROS)
+## A Quick, Guided install (no .settings file present, it will create one) (SHOULD ALSO WORK ON ALL DISTROS)
 
 You will need to have `python`, `python-venv` and `pip` on your system.
 Make sure to install for your GPU Vendor (AMD/NVIDIA):
@@ -21,7 +21,7 @@ Make sure to install for your GPU Vendor (AMD/NVIDIA):
 git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer && ./install.sh
 ```
 
-## A Quick, Guided install (WITH .settings file present) (SHOULD ALSO WORK ON ALL DISTROS)
+## A Quick, Unattended/headless install (i.e one where there is a .settings file present) (SHOULD ALSO WORK ON ALL DISTROS)
 
 You will need to have `python`, `python-venv` and `pip` on your system.
 Make sure to install for your GPU Vendor (AMD/NVIDIA):
