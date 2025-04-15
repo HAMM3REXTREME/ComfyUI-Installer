@@ -9,6 +9,7 @@ fi
 if [ -d "$COMFYUI_DIR/custom_nodes/ComfyUIMini" ]; then
     printf "[!] [\033[0;32mComfyUIMini\033[m] already exists, updating.\n"
     cd "$COMFYUI_DIR/custom_nodes/ComfyUIMini" || exit 1
+    git pull >/dev/null 2>&1
     chmod +x ./scripts/update.sh
     ./scripts/update.sh >/dev/null 2>&1
 else
