@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=ComfyUI
-Path=/media/rizzo/DATA/ComfyUI-Installer/ComfyUI/
-Exec=/media/rizzo/DATA/ComfyUI-Installer/scripts/run_gpu.sh
-Comment=A powerful and modular stable diffusion GUI with a graph/nodes interface.
-Terminal=true
-Icon=/media/rizzo/DATA/ComfyUI-Installer/graphics/comfyui.svg
-Type=Application
-NoDisplay=false
