@@ -8,11 +8,11 @@ else
 fi
 if [ -d "$COMFYUI_DIR/custom_nodes/comfyui-manager" ]; then
     printf "[!] [\033[0;32mComfyUI-Manager\033[m] already exists, updating.\n"
-    cd "$COMFYUI_DIR"/custom_nodes/comfyui-manager || exit 1
+    cd "$COMFYUI_DIR/custom_nodes/comfyui-manager" || exit 1
     git pull >/dev/null 2>&1
 else
     printf "[*] Installing [\033[0;32mComfyUI-Manager\033[m]\n"
-    cd "$COMFYUI_DIR"/custom_nodes || exit 1
+    cd "$COMFYUI_DIR/custom_nodes" || exit 1
     git clone https://github.com/ltdrdata/ComfyUI-Manager "$COMFYUI_DIR/custom_nodes/comfyui-manager" >/dev/null 2>&1
 fi
 

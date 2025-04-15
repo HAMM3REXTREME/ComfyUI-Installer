@@ -44,7 +44,7 @@ fi
 # pip install deepdiff pattern tensorflow xformers
 
 CREATE_RUNFILES() {
-    printf "[*] Creating %s/scripts/run_gpu.sh.\n" "$COMFYUI_INSTALLER_DIR"
+    printf "[*] Creating [\033[0;32m%s/scripts/run_gpu.sh\033[m]\n" "$COMFYUI_INSTALLER_DIR"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
 #!/bin/bash
 cd "$COMFYUI_DIR" || exit 1
@@ -53,7 +53,7 @@ python main.py --listen 0.0.0.0 --preview-method auto
 EOF
     chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
 
-    printf "[*] Creating %s/scripts/run_cpu.sh.\n" "$COMFYUI_INSTALLER_DIR"
+    printf "[*] Creating [\033[0;32m%s/scripts/run_cpu.sh.\033[m]\n" "$COMFYUI_INSTALLER_DIR"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
 #!/bin/bash
 cd "$COMFYUI_DIR" || exit 1
@@ -63,7 +63,7 @@ EOF
     chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
 }
 ADD_TO_DESKTOP() {
-    printf "[*] Creating %s/scripts/ComfyUI.desktop" "$COMFYUI_INSTALLER_DIR"
+    printf "[*] Creating [\033[0;32m%s/scripts/ComfyUI.desktop\033[m]\n" "$COMFYUI_INSTALLER_DIR"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
 [Desktop Entry]
 Name=ComfyUI

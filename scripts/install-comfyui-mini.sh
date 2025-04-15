@@ -21,7 +21,7 @@ else
         exit 1
     fi
 
-    printf "[*] Installing dependencies for ComfyUIMini\n"
+    printf "[*] Installing dependencies for [\033[0;32mComfyUIMini\033[m]\n"
     npm install >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         printf "[!] Failed to update dependencies. Please check your internet connection and try again.\n"
@@ -34,7 +34,7 @@ else
         printf "[!] Build failed. Check the console for more information.\n"
         exit 1
     fi
-    printf "[*] Creating config from example.default.json with output_dir set to %s/output\n" "$COMFYUI_DIR"
+    printf "[*] Creating config from [\033[0;32mexample.default.json\033[m] with output_dir set to [\033[0;32m%s/output\033[m]\n" "$COMFYUI_DIR"
     cp ./config/default.example.json ./config/default.json
     sed -i "s|path/to/comfyui/output/folder|$COMFYUI_DIR/output|g" ./config/default.json
     printf "[*] Creating workflows symlink\n"
@@ -43,7 +43,7 @@ else
 fi
 
 ADD_TO_DESKTOP() {
-    printf "[*] Creating %s/scripts/ComfyUIMini.desktop" "$COMFYUI_INSTALLER_DIR"
+    printf "[*] Creating [\033[0;32m%s/scripts/ComfyUIMini.desktop\033[m]\n" "$COMFYUI_INSTALLER_DIR"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop"
 [Desktop Entry]
 Name=ComfyUIMini
