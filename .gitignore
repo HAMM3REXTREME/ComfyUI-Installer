@@ -2,7 +2,7 @@ ComfyUI
 ComfyUI-Installer.code-workspace
 scripts/ComfyUI.service
 scripts/ComfyUIMini.service
-cripts/ComfyUI.desktop
+scripts/ComfyUI.desktop
 scripts/ComfyUIMini.desktop
 scripts/run_cpu.sh
 scripts/run_gpu.sh
