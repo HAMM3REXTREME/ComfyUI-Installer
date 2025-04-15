@@ -1,32 +1,45 @@
 # ComfyUI Installer
+Origional Author: https://github.com/HAMM3REXTREME/ComfyUI-Installer
+Modified Guided installer.sh by: https://github.com/itsdarklikehell
 
 Easily install ComfyUI + ComfyUI-Manager + ComfyUIMini (in a python venv) on Linux.
-Tested on Arch + AMD GPU.
-Tested on Ubuntu + Nvidia GPU.
+
+Tested on Arch + AMD GPU (by https://github.com/HAMM3REXTREME).
+
+Tested on Ubuntu + Nvidia GPU (https://github.com/itsdarklikehell).
 
 ![ComfyUI Screenshot](graphics/comfyui_screenshot.png)
 _Note:_ This is not the official ComfyUI icon.
 
-## Quick Start - Simple install (ALL DISTROS)
-
-1. To install ComfyUI using the simple script (which won't have features like service files etc. but works on any distro), **clone the `simple` branch and cd into the repo**:  
-   `git clone -b simple https://github.com/HAMM3REXTREME/ComfyUI-Installer && cd ComfyUI-Installer`
-
-2. After that's done, run the install script for your GPU vendor (AMD or Nvidia). This might take a while.  
-   **To install for AMD:** `./install-amd.sh`  
-   **To install for Nvidia:** `./install-nvidia.sh`  
-   _Tip:_ You can optionally run `./menu-entry.sh` in order to make a desktop menu entry.
-
-3. When the install script has finished, you just need to copy/paste your models into their proper directories:  
-   Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`  
-   Put your VAE in: `ComfyUI/models/vae`
-
-Once you've done that, **launch ComfyUI using**: `./launch.sh`
-
-## Quick Start - UBUNTU SPECIFIC FEATURES
+## Quick Start - Unattended/headless install (SHOULD WORK ON ALL DISTROS)
 
 You will need to have `python`, `python-venv` and `pip` on your system.
-Make sure to install for your GPU Vendor (AMD/Nvidia):
+Make sure to install for your GPU Vendor (AMD/NVIDIA):
+
+```sh
+git clone https://github.com/itsdarklikehell/ComfyUI-Installer
+cd ComfyUI-Installer
+nano .settings
+```
+create (or if already present) edit the .settings file containing the following:
+```sh
+# The directory where the installer is located:
+export COMFYUI_INSTALLER_DIR=~/ComfyUI-Installer
+# The directory where the ComfyUI is located:
+export COMFYUI_DIR=~/ComfyUI-Installer/ComfyUI
+# The type of GPU to use:
+export GPU=NVIDIA
+# The directory where the backups are located:
+export BACKUP_DIR=~/ComfyUI-Installer/backup
+# The virtual environment directory:
+export VIRTUAL_ENV=~/ComfyUI-Installer/ComfyUI/venv
+# Use systemd:
+export USE_SYSTEMD=true
+```
+## Guided install (SHOULD ALSO WORK ON ALL DISTROS)
+
+You will need to have `python`, `python-venv` and `pip` on your system.
+Make sure to install for your GPU Vendor (AMD/NVIDIA):
 
 ```sh
 git clone https://github.com/itsdarklikehell/ComfyUI-Installer
@@ -39,23 +52,41 @@ cd ComfyUI-Installer
    `git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer`
 
 2. Then run the install script:
-   `./install.sh`
+   `./install.sh` # Upon first run, it will ask for some information and it stores that in a .settings file like this.
+   ```sh
+   # The directory where the installer is located:
+   export COMFYUI_INSTALLER_DIR=~/ComfyUI-Installer
+   # The directory where the ComfyUI is located:
+   export COMFYUI_DIR=~/ComfyUI-Installer/ComfyUI
+   # The type of GPU to use:
+   export GPU=NVIDIA
+   # The directory where the backups are located:
+   export BACKUP_DIR=~/ComfyUI-Installer/backup
+   # The virtual environment directory:
+   export VIRTUAL_ENV=~/ComfyUI-Installer/ComfyUI/venv
+   # Use systemd:
+   export USE_SYSTEMD=true
+   ```
 
-3. When the install script has finished, ComfyUI systemd service should now be running, you can check the status of the service with:
+3. When the install script has finished, if you have chosen to use a systemd service, ComfyUI should now be starting/running, you can check the status of the service with:
    `sudo systemctl status ComfyUI.service`
    If it's not running, you can start it with:
    `sudo systemctl start ComfyUI.service`
    If you want to enable it to start on boot, you can do so with:
    `sudo systemctl enable ComfyUI.service`
+If you have chosen not to use systemd, you can start ComfyUI with:
+   `./scripts/run_gpu.sh`
+   or
+   `./scripts/run_cpu.sh`.
 
-4. Now you can download custom_nodes and models with the ComfyUI-Manager or copy/paste/clone custom_nodes and models into their proper directories:
+1. Now you can download custom_nodes and models with the ComfyUI-Manager or copy/paste/clone custom_nodes and models into their proper directories:
    Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`
    Put your VAE in: `ComfyUI/models/vae` etc.
 
-Once you've done that, ComfyUI and ComfyUIMini should be running on your system (give it a few seconds to start up).
-Then open your browser and go to:
-[http://0.0.0.0:8188/](http://0.0.0.0:8188/) for ComfyUI's interface (Works better on desktop devices).
-[http://0.0.0.0:3000/](http://0.0.0.0:3000/) for ComfyUIMini's interface (Works better on mobile devices).
+If everyting has worked, ComfyUI and ComfyUIMini should be installed.
+Open your browser and go to:
+[http://0.0.0.0:8188/](http://0.0.0.0:8188/) to view ComfyUI's interface (Works better on desktop devices/browsers).
+[http://0.0.0.0:3000/](http://0.0.0.0:3000/) to view ComfyUIMini's interface (Should work better with mobile devices/browsers).
 To check ComfyUI's status, run: `tail -f ComfyUI/logs/comfyui.log` or `journalctl -f -u ComfyUI.service`
 To check ComfyUIMini's status, run: `tail -f ComfyUI/custom_nodes/ComfyUIMini/logs/comfyuimini.log` or `journalctl -f -u ComfyUIMini.service`
 
@@ -63,14 +94,14 @@ To check ComfyUIMini's status, run: `tail -f ComfyUI/custom_nodes/ComfyUIMini/lo
 
 **To Manually launch ComfyUI use**:
 
- `bash ./scripts/run_gpu.sh`
+ `./scripts/run_gpu.sh`
 or
- `bash ./scripts/run_cpu.sh`.
+ `./scripts/run_cpu.sh`.
 
 
 **To Manually launch ComfyUIMini use**:
 
- `bash ./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh`.
+ `./ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh`.
 
 **To start ComfyUI systemd service use**:
 
@@ -115,7 +146,7 @@ or
 ## Updating
 
 ### Updating ComfyUI
-Simply re-run the install.sh script should detect that ComfyUI is allready installed, it will then proceed to try and update it. Or if it is already running you could use the ComfyUI-Manager to update everything.
+Simply re-run the install.sh script should detect that ComfyUI is already installed, it will then proceed to try and update it. Or if it is already running you could use the ComfyUI-Manager to update everything.
 
 ## Troubleshooting
 

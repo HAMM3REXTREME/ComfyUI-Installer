@@ -8,4 +8,3 @@ scripts/ComfyUIMini.desktop
 scripts/run_cpu.sh
 scripts/run_gpu.sh
 backup
-.settings

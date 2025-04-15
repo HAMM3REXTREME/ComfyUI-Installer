@@ -81,6 +81,14 @@ ASK_USER_INPUT() {
         exit 1
     fi
 
+    USE_SYSTEMD=$(whiptail --title "Use Systemd?" --inputbox "Should a systemd service be created? (Default: true)" $LINES $COLUMNS "true" 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus == 0 ]; then
+        printf "[*] Create systemd service files is set to: [\033[0;32m%s\033[m]\n" "$USE_SYSTEMD"
+    else
+        printf "[!] User selected Cancel."
+        exit 1
+    fi
     cat <<EOF >.settings
 # The directory where the installer is located:
 export COMFYUI_INSTALLER_DIR=$COMFYUI_INSTALLER_DIR
@@ -92,6 +100,9 @@ export GPU=$GPU
 export BACKUP_DIR=$BACKUP_DIR
 # The virtual environment directory:
 export VIRTUAL_ENV=$VIRTUAL_ENV
+# Use systemd:
+export USE_SYSTEMD=$USE_SYSTEMD
+
 EOF
     printf "[*] Created [\033[0;32m.settings\033[m] file with the following contents:\n\n"
     cat .settings
@@ -194,16 +205,6 @@ LINKING_DIRS() {
     printf "[*] [\033[0;32mLinked\033[m] [%s/custom_nodes]\n" "$COMFYUI_DIR"
     printf "[*] [\033[0;32mTo:\033[m] [%s]\n" "$BACKUP_DIR/custom_nodes"
 }
-START_COMFYUI_SERVICE() {
-    printf "\033[32mStarting ComfyUI.service.' \033[0m\n"
-    sudo systemctl daemon-reload
-    sudo systemctl start ComfyUI
-}
-START_COMFYUIMINI_SERVICE() {
-    printf "\033[32mStarting ComfyUIMini.service.' \033[0m\n"
-    sudo systemctl daemon-reload
-    sudo systemctl start ComfyUIMini
-}
 
 INST_DEPS
 INSTALL_COMFYUI
@@ -214,15 +215,12 @@ INSTALL_COMFYUI_MINI
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
 chmod +x "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/"*.sh
 
-START_COMFYUI_SERVICE
-START_COMFYUIMINI_SERVICE
-
 printf "\033[32mFinished!\033[0m\n\n"
 printf "\033[32mTo Launch ComfyUI manually, use: 'scripts/run_gpu.sh' or 'scripts/run_cpu.sh' \033[0m\n"
 printf "\033[32mTo Launch ComfyUIMini manually, use: 'ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh' \033[0m\n\n"
 
-printf "\033[32mTo start ComfyUI as systemd service, run: 'sudo systemctl start ComfyUI.service' \033[0m\n"
-printf "\033[32mTo start ComfyUIMini as systemd service, run: 'sudo systemctl start ComfyUIMini.service' \033[0m\n\n"
+printf "\033[32mTo Launch ComfyUI as systemd service, run: 'sudo systemctl start ComfyUI.service' \033[0m\n"
+printf "\033[32mTo Launch ComfyUIMini as systemd service, run: 'sudo systemctl start ComfyUIMini.service' \033[0m\n\n"
 
 printf "\033[32mTo enable ComfyUI service at boot, run: 'sudo systemctl enable ComfyUI.service' \033[0m\n"
 printf "\033[32mTo enable ComfyUIMini service at boot, run: 'sudo systemctl enable ComfyUIMini.service' \033[0m\n\n"

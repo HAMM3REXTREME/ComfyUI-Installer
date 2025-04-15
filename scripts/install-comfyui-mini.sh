@@ -91,5 +91,10 @@ EOF
     sudo cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.service" /etc/systemd/system/ComfyUIMini.service
 }
 
-CREATE_SERVICE
+if [ "$USE_SYSTEMD" == "true" ]; then
+    CREATE_SERVICE
+    printf "[*] Starting ComfyUIMini service.\n"
+    sudo systemctl daemon-reload
+    sudo systemctl start ComfyUIMini.service
+fi
 ADD_TO_DESKTOP

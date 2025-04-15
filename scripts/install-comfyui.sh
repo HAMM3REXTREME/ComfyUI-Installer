@@ -112,5 +112,10 @@ EOF
     sudo cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.service" /etc/systemd/system/ComfyUI.service
 }
 CREATE_RUNFILES
-CREATE_SERVICE
+if [ "$USE_SYSTEMD" == "true" ]; then
+    CREATE_SERVICE
+    printf "[*] Starting ComfyUI Service.\n"
+    sudo systemctl daemon-reload
+    sudo systemctl start ComfyUI.service
+fi
 ADD_TO_DESKTOP
