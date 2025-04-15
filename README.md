@@ -7,7 +7,23 @@ Tested on Ubuntu + Nvidia GPU.
 ![ComfyUI Screenshot](graphics/comfyui_screenshot.png)
 _Note:_ This is not the official ComfyUI icon.
 
-## Quick Start
+## Quick Start - Simple install (ALL DISTROS)
+
+1. To install ComfyUI using the simple script (which won't have features like service files etc. but works on any distro), **clone the `simple` branch and cd into the repo**:  
+   `git clone -b simple https://github.com/HAMM3REXTREME/ComfyUI-Installer && cd ComfyUI-Installer`
+
+2. After that's done, run the install script for your GPU vendor (AMD or Nvidia). This might take a while.  
+   **To install for AMD:** `./install-amd.sh`  
+   **To install for Nvidia:** `./install-nvidia.sh`  
+   _Tip:_ You can optionally run `./menu-entry.sh` in order to make a desktop menu entry.
+
+3. When the install script has finished, you just need to copy/paste your models into their proper directories:  
+   Put your SD checkpoints (the huge ckpt/safetensors files) in: `ComfyUI/models/checkpoints`  
+   Put your VAE in: `ComfyUI/models/vae`
+
+Once you've done that, **launch ComfyUI using**: `./launch.sh`
+
+## Quick Start - UBUNTU SPECIFIC FEATURES
 
 You will need to have `python`, `python-venv` and `pip` on your system.
 Make sure to install for your GPU Vendor (AMD/Nvidia):
