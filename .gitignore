@@ -1,4 +1,5 @@
-ComfyUI/*
+ComfyUI
+ComfyUI/**
 ComfyUI-Installer.code-workspace
 scripts/ComfyUI.service
 scripts/ComfyUIMini.service
