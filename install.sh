@@ -34,7 +34,6 @@ INST_DEPS() {
 }
 ASK_USER_INPUT() {
     eval "$(resize)"
-
     COMFYUI_INSTALLER_DIR=$(whiptail --title "Installer directory." --inputbox "Enter the directory where the installer currently is located. (Default: $PWD)" $LINES $COLUMNS "$PWD" 3>&1 1>&2 2>&3)
     COMFYUI_DIR=$(whiptail --title "Gpu Selection." --inputbox "Where should ComfyUI be installed? (Default: $PWD/ComfyUI)" $LINES $COLUMNS "$PWD/ComfyUI" 3>&1 1>&2 2>&3)
     BACKUP_DIR=$(whiptail --title "Backup directory." --inputbox "Where should the backup directory be created? (Default: $PWD/backup)" $LINES $COLUMNS "$PWD/backup" 3>&1 1>&2 2>&3)
@@ -56,19 +55,15 @@ ASK_USER_INPUT() {
     fi
     cat <<EOF >.settings
 # The directory where the installer is located:
-export COMFYUI_INSTALLER_DIR=$PWD
-
+export COMFYUI_INSTALLER_DIR=$COMFYUI_INSTALLER_DIR
 # The directory where the ComfyUI is located:
-export COMFYUI_DIR=$PWD/ComfyUI
-
+export COMFYUI_DIR=$COMFYUI_DIR
 # The type of GPU to use:
 export GPU=$GPU
-
 # The directory where the backups are located:
-export BACKUP_DIR=/media/$USER/DATA/ai-stuff
-
+export BACKUP_DIR=$BACKUP_DIR
 # The virtual environment directory:
-export VIRTUAL_ENV=$PWD/ComfyUI/venv
+export VIRTUAL_ENV=$VIRTUAL_ENV
 EOF
     printf "[*] Created [\033[0;32m.settings\033[m] file with the following contents:\n\n"
     cat .settings
@@ -77,20 +72,21 @@ EOF
 if [ ! -f .settings ]; then
     printf "[*] [\033[0;32m.settings\033[m] file not found, creating.\n"
     ASK_USER_INPUT
-    EXIT
+    printf "[*] Created [\033[0;32m.settings\033[m] file.\n"
+    source .settings
 else
     printf "[*] [\033[0;32m.settings\033[m] file found, loading.\n"
     source .settings
 fi
 INSTALL_COMFYUI() {
-    if [ -d ComfyUI ]; then
+    if [ -d "$COMFYUI_DIR" ]; then
         printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
-        cd ComfyUI || exit 1
+        cd "$COMFYUI_DIR" || exit 1
         git pull
     else
         printf "[*] Installing [\033[0;32mComfyUI\033[m].\n"
         chmod +x scripts/*.sh
-        ./scripts/install-comfyui.sh >/dev/null 2>&1
+        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui.sh" >/dev/null 2>&1
         printf "[*] [\033[0;32mComfyUI\033[m] installed.\n"
     fi
     printf "[*] Creating [\033[0;32mComfyUI.service\033[m] file.\n"
@@ -115,28 +111,28 @@ EOF
 }
 
 INSTALL_COMFYUI_MANAGER() {
-    if [ -d ComfyUI/custom_nodes/comfyui-manager ]; then
+    if [ -d "$COMFYUI_DIR/custom_nodes/comfyui-manager" ]; then
         printf "[!] [\033[0;32mComfyUI-Manager\033[m] already exists, updating.\n"
-        cd ComfyUI/custom_nodes/comfyui-manager || exit 1
+        cd "$COMFYUI_DIR/custom_nodes/comfyui-manager" || exit 1
         git pull
     else
         printf "[*] Installing [\033[0;32mComfyUI-Manager\033[m].\n"
-        chmod +x scripts/*.sh
-        ./scripts/install-comfyui-manager.sh >/dev/null 2>&1
+        chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
+        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui-manager.sh" >/dev/null 2>&1
         printf "[*] [\033[0;32mComfyUI-Manager\033[m] installed.\n"
     fi
 }
 INSTALL_COMFYUI_MINI() {
-    if [ -d ComfyUI/custom_nodes/ComfyUIMini ]; then
+    if [ -d "$COMFYUI_DIR/custom_nodes/ComfyUIMini" ]; then
         printf "[!] [\033[0;32mComfyUIMini\033[m] already exists, updating.\n"
-        cd ComfyUI/custom_nodes/ComfyUIMini || exit 1
+        cd "$COMFYUI_DIR/custom_nodes/ComfyUIMini" || exit 1
         git pull
-        chmod +x ./scripts/*.sh
-        ./scripts/update.sh >/dev/null 2>&1
+        chmod +x "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/"*.sh
+        "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/update.sh" >/dev/null 2>&1
     else
         printf "[*] Installing [\033[0;32mComfyUIMini\033[m].\n"
-        chmod +x scripts/*.sh
-        ./scripts/install-comfyui-mini.sh >/dev/null 2>&1
+        chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
+        "$COMFYUI_INSTALLER_DIR/scripts/install-comfyui-mini.sh" >/dev/null 2>&1
         printf "[*] [\033[0;32mComfyUIMini\033[m] installed.\n"
     fi
     printf "[*] Creating [\033[0;32mComfyUIMini.service\033[m] file.\n"
@@ -149,8 +145,8 @@ After=network.target
 Type=simple
 User=$USER
 Group=$USER
-WorkingDirectory=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini
-ExecStart=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh
+WorkingDirectory=$COMFYUI_DIR/custom_nodes/ComfyUIMini
+ExecStart=$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/start.sh
 
 [Install]
 WantedBy=multi-user.target
@@ -193,12 +189,12 @@ LINKING_DIRS() {
     if [ -d "$COMFYUI_INSTALLER_DIR/custom_nodes" ]; then
         rm -rf "$COMFYUI_INSTALLER_DIR/custom_nodes"
     fi
-    ln -sf "$BACKUP_DIR/web" "$COMFYUI_INSTALLER_DIR/ComfyUI"
-    ln -sf "$BACKUP_DIR/user" "$COMFYUI_INSTALLER_DIR/ComfyUI"
-    ln -sf "$BACKUP_DIR/output" "$COMFYUI_INSTALLER_DIR/ComfyUI"
-    ln -sf "$BACKUP_DIR/models" "$COMFYUI_INSTALLER_DIR/ComfyUI"
-    ln -sf "$BACKUP_DIR/input" "$COMFYUI_INSTALLER_DIR/ComfyUI"
-    ln -sf "$BACKUP_DIR/custom_nodes" "$COMFYUI_INSTALLER_DIR/ComfyUI"
+    ln -sf "$BACKUP_DIR/web" "$COMFYUI_DIR"
+    ln -sf "$BACKUP_DIR/user" "$COMFYUI_DIR"
+    ln -sf "$BACKUP_DIR/output" "$COMFYUI_DIR"
+    ln -sf "$BACKUP_DIR/models" "$COMFYUI_DIR"
+    ln -sf "$BACKUP_DIR/input" "$COMFYUI_DIR"
+    ln -sf "$BACKUP_DIR/custom_nodes" "$COMFYUI_DIR"
 }
 START_COMFYUI_SERVICE() {
     printf "\033[32mStarting ComfyUI.service.' \033[0m\n"
@@ -215,7 +211,7 @@ ADD_TO_DESKTOP() {
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
 [Desktop Entry]
 Name=ComfyUI
-Path=$COMFYUI_INSTALLER_DIR/ComfyUI/
+Path=$COMFYUI_DIR/
 Exec=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
 Comment=A powerful and modular stable diffusion GUI with a graph/nodes interface.
 Terminal=true
@@ -229,8 +225,8 @@ EOF
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop"
 [Desktop Entry]
 Name=ComfyUIMini
-Path=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/
-Exec=$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/start.sh
+Path=$COMFYUI_DIR/custom_nodes/ComfyUIMini/
+Exec=$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/start.sh
 Comment=A powerful and modular stable diffusion GUI with a graph/nodes interface.
 Terminal=true
 Icon=$COMFYUI_INSTALLER_DIR/graphics/comfyui.svg
@@ -254,14 +250,14 @@ CREATE_RUNFILES() {
     printf "[*] Adding runfile to scripts.\n"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
 #!/bin/bash
-cd "$COMFYUI_INSTALLER_DIR/ComfyUI" || exit 1
+cd "$COMFYUI_DIR" || exit 1
 source venv/bin/activate
 python main.py --listen 0.0.0.0 --preview-method auto
 EOF
     chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
 #!/bin/bash
-cd "$COMFYUI_INSTALLER_DIR/ComfyUI"
+cd "$COMFYUI_DIR" || exit 1
 source venv/bin/activate
 python main.py --listen 0.0.0.0 --preview-method auto --cpu
 EOF
@@ -276,7 +272,7 @@ ADD_TO_DESKTOP
 CREATE_RUNFILES
 
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
-chmod +x "$COMFYUI_INSTALLER_DIR/ComfyUI/custom_nodes/ComfyUIMini/scripts/"*.sh
+chmod +x "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/"*.sh
 
 START_COMFYUI_SERVICE
 START_COMFYUIMINI_SERVICE
@@ -301,4 +297,4 @@ printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:3000' for ComfyUIMini 
 
 # xdg-open http://0.0.0.0:3000
 # xdg-open http://0.0.0.0:8188
-multitail -f "$COMFYUI_INSTALLER_DIR/ComfyUI/user/comfyui.log"
+multitail -f "$COMFYUI_DIR/user/comfyui.log"
