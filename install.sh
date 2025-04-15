@@ -241,87 +241,12 @@ START_COMFYUIMINI_SERVICE() {
     sudo systemctl daemon-reload
     sudo systemctl start ComfyUIMini
 }
-ADD_TO_DESKTOP() {
-    printf "[*] Creating %s/scripts/ComfyUI.desktop" "$COMFYUI_INSTALLER_DIR"
-    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
-[Desktop Entry]
-Name=ComfyUI
-Path=$COMFYUI_DIR/
-Exec=$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh
-Comment=A powerful and modular stable diffusion GUI with a graph/nodes interface.
-Terminal=true
-Icon=$COMFYUI_INSTALLER_DIR/graphics/comfyui.svg
-Type=Application
-NoDisplay=false
-EOF
-    cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop" ~/.local/share/applications/ComfyUI.desktop
-    chmod +x ~/.local/share/applications/ComfyUI.desktop
 
-    printf "[*] Adding ComfyUI to your desktop.\n"
-    exec_path="$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"   # Launch script
-    icon_path="$COMFYUI_INSTALLER_DIR/graphics/comfyui.svg" # ComfyUI Icon
-    desktop-file-install \
-        --dir="$HOME/.local/share/applications/" \
-        --set-key=Path \
-        --set-value="$PWD" \
-        --set-key=Exec \
-        --set-value="$exec_path" \
-        --set-icon="$icon_path" \
-        "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
-
-    printf "[*] Creating %s/scripts/ComfyUIMini.desktop" "$COMFYUI_INSTALLER_DIR"
-    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop"
-[Desktop Entry]
-Name=ComfyUIMini
-Path=$COMFYUI_DIR/custom_nodes/ComfyUIMini/
-Exec=$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/start.sh
-Comment=A powerful and modular stable diffusion GUI with a graph/nodes interface.
-Terminal=true
-Icon=$COMFYUI_INSTALLER_DIR/graphics/comfyui.svg
-Type=Application
-NoDisplay=false
-EOF
-    cp "$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop" ~/.local/share/applications/ComfyUIMini.desktop
-    chmod +x ~/.local/share/applications/ComfyUIMini.desktop
-
-    printf "[*] Adding ComfyUIMini to your desktop.\n"
-    exec_path="$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/start.sh" # Launch script
-    icon_path="$COMFYUI_INSTALLER_DIR/graphics/comfyui.svg"            # ComfyUI Icon
-    desktop-file-install \
-        --dir="$HOME/.local/share/applications/" \
-        --set-key=Path \
-        --set-value="$PWD" \
-        --set-key=Exec \
-        --set-value="$exec_path" \
-        --set-icon="$icon_path" \
-        "$COMFYUI_INSTALLER_DIR/scripts/ComfyUIMini.desktop"
-}
-CREATE_RUNFILES() {
-    printf "[*] Creating %s/scripts/run_gpu.sh.\n" "$COMFYUI_INSTALLER_DIR"
-    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
-#!/bin/bash
-cd "$COMFYUI_DIR" || exit 1
-source venv/bin/activate
-python main.py --listen 0.0.0.0 --preview-method auto
-EOF
-    chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
-
-    printf "[*] Creating %s/scripts/run_cpu.sh.\n" "$COMFYUI_INSTALLER_DIR"
-    cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
-#!/bin/bash
-cd "$COMFYUI_DIR" || exit 1
-source venv/bin/activate
-python main.py --listen 0.0.0.0 --preview-method auto --cpu
-EOF
-    chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
-}
 INST_DEPS
 INSTALL_COMFYUI
 LINKING_DIRS
 INSTALL_COMFYUI_MANAGER
 INSTALL_COMFYUI_MINI
-ADD_TO_DESKTOP
-CREATE_RUNFILES
 
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
 chmod +x "$COMFYUI_DIR/custom_nodes/ComfyUIMini/scripts/"*.sh
