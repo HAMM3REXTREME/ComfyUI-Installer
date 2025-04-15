@@ -30,7 +30,7 @@ Make sure to install for your GPU Vendor (AMD/NVIDIA):
 git clone https://github.com/itsdarklikehell/ComfyUI-Installer && cd ComfyUI-Installer
 ```
 
-Create a .settings file containing the following:
+Create a .settings file in the ComfyUI-Installer folder containing the following:
 
 ```sh
 # The directory where the installer is located:
