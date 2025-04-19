@@ -1,12 +1,12 @@
-# ComfyUI Installer
+# Comfy-Cli, ComfyUI and ComfyUI Manager Installer
 Origional Author: https://github.com/HAMM3REXTREME/ComfyUI-Installer
-Modified Guided installer.sh by: https://github.com/itsdarklikehell
+Modified Guided installer.sh by: https://github.com/itsdarklikehell/ComfyUI-Installer
 
 Easily install Comfy-Cli + ComfyUI + ComfyUI-Manager (in a python venv) on Linux.
 
-Tested on Arch + AMD GPU (by https://github.com/HAMM3REXTREME).
+Tested on Arch + AMD GPU (by https://github.com/HAMM3REXTREME/ComfyUI-Installer).
 
-Tested on Ubuntu + Nvidia GPU (https://github.com/itsdarklikehell).
+Tested on Ubuntu + Nvidia GPU (https://github.com/itsdarklikehell/ComfyUI-Installer).
 
 ![ComfyUI Screenshot](graphics/comfyui_screenshot.png)
 _Note:_ This is not the official ComfyUI icon.
