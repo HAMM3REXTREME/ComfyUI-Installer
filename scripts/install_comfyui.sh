@@ -82,3 +82,5 @@ ADD_TO_DESKTOP
 if [ -f "$COMFYUI_INSTALLER_DIR/scripts/linker.sh" ]; then
     "$COMFYUI_INSTALLER_DIR/scripts/linker.sh"
 fi
+printf "[*] [\033[0;32mComfyUI\033[m] installation complete.\n"
+

@@ -106,5 +106,7 @@ printf "\033[32mTo Launch ComfyUI manually, use: 'scripts/run_gpu.sh' or 'script
 
 printf "\033[32mOpen a browser and go to: 'http://0.0.0.0:8188' for ComfyUI \033[0m\n"
 
+./scripts/run_gpu.sh
+
 # xdg-open http://0.0.0.0:8188
-# tail -f "$COMFYUI_DIR/user/comfyui.log"
+tail -f "$COMFYUI_DIR/user/comfyui.log"
