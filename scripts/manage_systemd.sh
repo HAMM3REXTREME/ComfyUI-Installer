@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+
 if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
     if [ -f ".settings" ]; then
         pirntf "source [\033[0;32m.settings\033[m]"
@@ -23,6 +24,7 @@ SYSTEMD_MENU_SELECTION=$(whiptail --title "Menu example" --menu "Choose an optio
     "Remove ComfyUI Service" "Remove the ComfyUI systemd service" \
     "Exit" "Exit" 3>&1 1>&2 2>&3)
 exitstatus=$?
+
 if [ $exitstatus == 0 ]; then
     case $SYSTEMD_MENU_SELECTION in
     "Create ComfyUI Service")

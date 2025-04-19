@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+
 if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
     if [ -f ".settings" ]; then
         pirntf "source [\033[0;32m.settings\033[m]"
@@ -27,9 +28,6 @@ else
     comfy --workspace="$COMFYUI_DIR" install
 fi
 
-# find custom_nodes/ -type f -name 'requirements.txt' -exec pip install -r {} \;
-
-# pip install deepdiff pattern tensorflow xformers
 CREATE_RUNFILES() {
     rncmd_gpu="comfy launch -- --listen 0.0.0.0 --preview-method auto"
     rncmd_cpu="comfy launch -- --listen 0.0.0.0 --preview-method auto --cpu"
@@ -51,6 +49,7 @@ $rncmd_cpu
 EOF
     chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
 }
+
 ADD_TO_DESKTOP() {
     printf "[*] Creating [\033[0;32m%s/scripts/ComfyUI.desktop\033[m]\n" "$COMFYUI_INSTALLER_DIR"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
@@ -79,9 +78,8 @@ EOF
         --set-icon="$icon_path" \
         "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
 }
+
 CREATE_RUNFILES
 ADD_TO_DESKTOP
-if [ -f "$COMFYUI_INSTALLER_DIR/scripts/linker.sh" ]; then
-    "$COMFYUI_INSTALLER_DIR/scripts/linker.sh"
-fi
+
 printf "[*] [\033[0;32mComfyUI\033[m] installation complete.\n"

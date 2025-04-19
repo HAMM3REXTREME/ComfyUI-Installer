@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+
 if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
     if [ -f ".settings" ]; then
         pirntf "source [\033[0;32m.settings\033[m]"
@@ -48,4 +49,5 @@ EOF
     fi
 
 }
+
 EXTRA_MODELS
