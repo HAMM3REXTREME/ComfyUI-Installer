@@ -10,3 +10,4 @@ scripts/run_gpu.sh
 backup
 ComfyUI-Installer.code-workspace
 scripts/.settings
+scripts/linker.sh

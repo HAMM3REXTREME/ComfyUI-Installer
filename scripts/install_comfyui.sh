@@ -79,3 +79,6 @@ EOF
 }
 CREATE_RUNFILES
 ADD_TO_DESKTOP
+if [ -f "$COMFYUI_INSTALLER_DIR/scripts/linker.sh" ]; then
+    "$COMFYUI_INSTALLER_DIR/scripts/linker.sh"
+fi
