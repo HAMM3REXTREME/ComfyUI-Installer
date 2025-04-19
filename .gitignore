@@ -1,3 +1,4 @@
+venv
 ComfyUI
 ComfyUI/**
 scripts/ComfyUI.service
@@ -8,3 +9,4 @@ scripts/run_cpu.sh
 scripts/run_gpu.sh
 backup
 ComfyUI-Installer.code-workspace
+scripts/.settings
