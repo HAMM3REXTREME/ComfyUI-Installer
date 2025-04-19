@@ -2,8 +2,10 @@
 set -e
 if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
     if [ -f ".settings" ]; then
+        pirntf "source [\033[0;32m.settings\033[m]"
         source .settings
     elif [ -f "scripts/.settings" ]; then
+        printf "source [\033[0;32mscripts/.settings\033[m]"
         source scripts/.settings
     else
         printf "[!] No settings file found. Please run the setup script first."
