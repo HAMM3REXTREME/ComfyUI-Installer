@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -e
-if [ ! -f .settings ]; then
-    printf "[*] [\033[0;32m.settings\033[m] file not found, creating.\n"
-    ASK_USER_INPUT
-    printf "[*] Created [\033[0;32m.settings\033[m] file.\n"
-    source .settings
-else
-    printf "[*] [\033[0;32m.settings\033[m] file found, loading.\n"
-    source .settings
-    sleep 1
+if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
+    if [ -f ".settings" ]; then
+        source .settings
+    elif [ -f "scripts/.settings" ]; then
+        source scripts/.settings
+    else
+        printf "[!] No settings file found. Please run the setup script first."
+        exit 1
+    fi
 fi
 
 EXTRA_MODELS() {

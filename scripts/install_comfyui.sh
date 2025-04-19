@@ -6,7 +6,7 @@ if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
     elif [ -f "scripts/.settings" ]; then
         source scripts/.settings
     else
-        echo "[!] No settings file found. Please run the setup script first."
+        printf "[!] No settings file found. Please run the setup script first."
         exit 1
     fi
 fi
@@ -83,4 +83,3 @@ if [ -f "$COMFYUI_INSTALLER_DIR/scripts/linker.sh" ]; then
     "$COMFYUI_INSTALLER_DIR/scripts/linker.sh"
 fi
 printf "[*] [\033[0;32mComfyUI\033[m] installation complete.\n"
-

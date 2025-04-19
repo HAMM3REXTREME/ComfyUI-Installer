@@ -71,6 +71,7 @@ if [ $exitstatus == 0 ]; then
     case $MAIN_MENU_SELECTION in
     "Install ComfyUI")
         "$COMFYUI_INSTALLER_DIR/scripts/install_comfyui.sh"
+        "$COMFYUI_INSTALLER_DIR/scripts/linker.sh"
         ;;
     "Add External Models")
         "$COMFYUI_INSTALLER_DIR/scripts/add_external_models.sh"
