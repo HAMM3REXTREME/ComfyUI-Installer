@@ -16,9 +16,9 @@ python -m venv "$VIRTUAL_ENV"
 source "$VIRTUAL_ENV/bin/activate"
 
 if [ -d "$COMFYUI_INSTALLER_DIR/ComfyUI" ]; then
-    printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
-    cd "$COMFYUI_INSTALLER_DIR"/ComfyUI || exit 1
-    git pull >/dev/null 2>&1
+    pip install -q comfy-cli
+    comfy --install-completion
+    comfy --workspace="$COMFYUI_DIR" install --restore
 else
     pip install -q comfy-cli
     comfy --install-completion
