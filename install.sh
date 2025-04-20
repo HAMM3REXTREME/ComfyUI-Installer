@@ -62,52 +62,56 @@ else
     sleep 1
 fi
 
-MAIN_MENU_SELECTION=$(whiptail --title "Menu example" --menu "Choose an option" $LINES $COLUMNS $((LINES - 8)) \
-    "Install ComfyUI" "Install/Update ComfyUI" \
-    "Add External Models" "Add external models directory to ComfyUI" \
-    "Lauch ComfyUI Gpu" "Launch ComfyUI with GPU (in console)" \
-    "Lauch ComfyUI Cpu" "Launch ComfyUI with CPU (in console)" \
-    "Manage Systemd Services" "Manage systemd services" \
-    "Link directories" "Link directories to ComfyUI" \
-    "Show log" "Show the log of ComfyUI" \
-    "Exit" "Exit" 3>&1 1>&2 2>&3)
-exitstatus=$?
+while true; do
+    MAIN_MENU_SELECTION=$(whiptail --title "Menu example" --menu "Choose an option" $LINES $COLUMNS $((LINES - 8)) \
+        "Install ComfyUI" "Install/Update ComfyUI" \
+        "Add External Models" "Add external models directory to ComfyUI" \
+        "Lauch ComfyUI Gpu" "Launch ComfyUI with GPU (in console)" \
+        "Lauch ComfyUI Cpu" "Launch ComfyUI with CPU (in console)" \
+        "Manage Systemd Services" "Manage systemd services" \
+        "Link directories" "Link directories to ComfyUI" \
+        "Show log" "Show the log of ComfyUI" \
+        "Exit" "Exit" 3>&1 1>&2 2>&3)
+    exitstatus=$?
 
-if [ $exitstatus == 0 ]; then
-    case $MAIN_MENU_SELECTION in
-    "Install ComfyUI")
-        "$COMFYUI_INSTALLER_DIR/scripts/install_comfyui.sh"
-        ;;
-    "Add External Models")
-        "$COMFYUI_INSTALLER_DIR/scripts/add_external_models.sh"
-        ;;
-    "Lauch ComfyUI Gpu")
-        "$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
-        ;;
-    "Lauch ComfyUI Cpu")
-        "$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
-        ;;
-    "Manage Systemd Services")
-        "$COMFYUI_INSTALLER_DIR/scripts/manage_systemd.sh"
-        ;;
-    "Link directories")
-        "$COMFYUI_INSTALLER_DIR/scripts/linker.sh"
-        ;;
-    "Show log")
-        tail -f "$COMFYUI_DIR/user/comfyui.log"
-        ;;
-    "Exit")
-        exit
-        ;;
-    *)
-        printf "[!] Invalid option.\n"
-        ;;
-    esac
-else
-    printf "[!] User selected Cancel."
-    exit 1
-fi
-
+    if [ $exitstatus == 0 ]; then
+        case $MAIN_MENU_SELECTION in
+        "Install ComfyUI")
+            "$COMFYUI_INSTALLER_DIR/scripts/install_comfyui.sh"
+            ;;
+        "Add External Models")
+            "$COMFYUI_INSTALLER_DIR/scripts/add_external_models.sh"
+            ;;
+        "Lauch ComfyUI Gpu")
+            "$COMFYUI_INSTALLER_DIR/scripts/run_gpu.sh"
+            ;;
+        "Lauch ComfyUI Cpu")
+            "$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
+            ;;
+        "Manage Systemd Services")
+            "$COMFYUI_INSTALLER_DIR/scripts/manage_systemd.sh"
+            ;;
+        "Link directories")
+            "$COMFYUI_INSTALLER_DIR/scripts/linker.sh"
+            ;;
+        "Show log")
+            tail -f "$COMFYUI_DIR/user/comfyui.log"
+            ;;
+        "Exit")
+            printf "[*] Exiting...\n"
+            break
+            exit
+            ;;
+        *)
+            printf "[!] Invalid option.\n"
+            ;;
+        esac
+    else
+        printf "[!] User selected Cancel."
+        break
+        exit 1
+    fi
+done
 chmod +x "$COMFYUI_INSTALLER_DIR/scripts/"*.sh
 
 printf "\033[32mFinished!\033[0m\n\n"

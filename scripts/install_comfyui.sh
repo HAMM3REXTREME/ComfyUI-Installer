@@ -12,6 +12,7 @@ if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
         printf "[!] No settings file found. Please run the setup script first."
         exit 1
     fi
+    sleep 1
 fi
 
 cd "$COMFYUI_INSTALLER_DIR" || exit 1

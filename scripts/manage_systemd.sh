@@ -12,6 +12,7 @@ if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
         printf "[!] No settings file found. Please run the setup script first."
         exit 1
     fi
+    sleep 1
 fi
 
 SYSTEMD_MENU_SELECTION=$(whiptail --title "Menu example" --menu "Choose an option" $LINES $COLUMNS $((LINES - 8)) \
