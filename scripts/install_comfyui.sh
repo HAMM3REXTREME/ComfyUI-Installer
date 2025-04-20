@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 set -e
+
 if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
     if [ -f ".settings" ]; then
+        pirntf "source [\033[0;32m.settings\033[m]"
         source .settings
     elif [ -f "scripts/.settings" ]; then
+        printf "source [\033[0;32mscripts/.settings\033[m]"
         source scripts/.settings
     else
-        echo "[!] No settings file found. Please run the setup script first."
+        printf "[!] No settings file found. Please run the setup script first."
         exit 1
     fi
+    sleep 1
 fi
 
 cd "$COMFYUI_INSTALLER_DIR" || exit 1
@@ -16,18 +20,15 @@ python -m venv "$VIRTUAL_ENV"
 source "$VIRTUAL_ENV/bin/activate"
 
 if [ -d "$COMFYUI_INSTALLER_DIR/ComfyUI" ]; then
-    printf "[!] [\033[0;32mComfyUI\033[m] already exists, updating.\n"
-    cd "$COMFYUI_INSTALLER_DIR"/ComfyUI || exit 1
-    git pull >/dev/null 2>&1
+    pip install -q comfy-cli
+    comfy --install-completion
+    comfy --workspace="$COMFYUI_DIR" install --restore
 else
     pip install -q comfy-cli
     comfy --install-completion
     comfy --workspace="$COMFYUI_DIR" install
 fi
 
-# find custom_nodes/ -type f -name 'requirements.txt' -exec pip install -r {} \;
-
-# pip install deepdiff pattern tensorflow xformers
 CREATE_RUNFILES() {
     rncmd_gpu="comfy launch -- --listen 0.0.0.0 --preview-method auto"
     rncmd_cpu="comfy launch -- --listen 0.0.0.0 --preview-method auto --cpu"
@@ -49,6 +50,7 @@ $rncmd_cpu
 EOF
     chmod +x "$COMFYUI_INSTALLER_DIR/scripts/run_cpu.sh"
 }
+
 ADD_TO_DESKTOP() {
     printf "[*] Creating [\033[0;32m%s/scripts/ComfyUI.desktop\033[m]\n" "$COMFYUI_INSTALLER_DIR"
     cat <<EOF >"$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
@@ -77,5 +79,8 @@ EOF
         --set-icon="$icon_path" \
         "$COMFYUI_INSTALLER_DIR/scripts/ComfyUI.desktop"
 }
+
 CREATE_RUNFILES
 ADD_TO_DESKTOP
+
+printf "[*] [\033[0;32mComfyUI\033[m] installation complete.\n"

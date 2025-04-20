@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 set -e
+
 if [ -n "$COMFYUI_INSTALLER_DIR" ]; then
     if [ -f ".settings" ]; then
+        pirntf "source [\033[0;32m.settings\033[m]"
         source .settings
     elif [ -f "scripts/.settings" ]; then
+        printf "source [\033[0;32mscripts/.settings\033[m]"
         source scripts/.settings
     else
-        echo "[!] No settings file found. Please run the setup script first."
+        printf "[!] No settings file found. Please run the setup script first."
         exit 1
     fi
+    sleep 1
 fi
 
 SYSTEMD_MENU_SELECTION=$(whiptail --title "Menu example" --menu "Choose an option" $LINES $COLUMNS $((LINES - 8)) \
@@ -21,6 +25,7 @@ SYSTEMD_MENU_SELECTION=$(whiptail --title "Menu example" --menu "Choose an optio
     "Remove ComfyUI Service" "Remove the ComfyUI systemd service" \
     "Exit" "Exit" 3>&1 1>&2 2>&3)
 exitstatus=$?
+
 if [ $exitstatus == 0 ]; then
     case $SYSTEMD_MENU_SELECTION in
     "Create ComfyUI Service")
